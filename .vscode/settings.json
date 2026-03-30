@@ -1,0 +1,60 @@
+{
+  // Colours inspired by https://resumeoptimiser.snest.icu/ (navy + teal)
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#19436b",
+    "activityBar.background": "#0f2942",
+    "activityBar.foreground": "#ecfeff",
+    "activityBar.inactiveForeground": "#ecfeff99",
+    "activityBarBadge.background": "#00b8b0",
+    "activityBarBadge.foreground": "#0f2942",
+    "commandCenter.border": "#ecfeff40",
+    "sash.hoverBorder": "#00b8b0",
+    "statusBar.background": "#19436b",
+    "statusBar.foreground": "#ecfeff",
+    "statusBarItem.hoverBackground": "#02e6e066",
+    "statusBarItem.remoteBackground": "#19436b",
+    "statusBarItem.remoteForeground": "#ecfeff",
+    "titleBar.activeBackground": "#19436b",
+    "titleBar.activeForeground": "#ecfeff",
+    "titleBar.inactiveBackground": "#19436bcc",
+    "titleBar.inactiveForeground": "#ecfeff99"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.classAttributes": ["class", "ui"],
+  "tailwindCSS.experimental.classRegex": [
+    ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue"
+  ]
+}
