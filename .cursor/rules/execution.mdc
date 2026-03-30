@@ -40,7 +40,7 @@ alwaysApply: true
 ## Documentation
 
 - When `docs/` exists, keep it in sync with non-trivial implementation changes in the same work session.
-- Until then, record decisions that affect product behavior in `planning/` or the plan file, as appropriate.
+- Until then, record decisions that affect product behavior in `internal/` or the plan file, as appropriate.
 
 ## UI
 

@@ -22,4 +22,4 @@ Treat rule authoring like test-driven documentation: consider when an agent woul
 ## Related
 
 - Existing rules → `.cursor/rules/*.mdc`
-- Product context → `planning/`
+- Product context → `internal/`

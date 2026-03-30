@@ -10,8 +10,8 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 ## Product context
 
 - Local-first score sheets for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
-- Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `planning/Score Slate PDR.md` and `.cursor/rules/state-and-persistence.mdc`.
-- Requirements source: `planning/Score Slate Requirements.md`, `planning/Score Slate PDR.md`.
+- Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `internal/Score Slate PDR.md` and `.cursor/rules/state-and-persistence.mdc`.
+- Requirements source: `internal/Score Slate Requirements.md`, `internal/Score Slate PDR.md`.
 
 ## Invariants
 
@@ -27,7 +27,8 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 
 ## Project reference map
 
-- **Planning / PRD**: `planning/` — requirements and product decisions.
+- **Technical docs**: `docs/README.md` — architecture and infrastructure; keep in sync with meaningful code changes.
+- **Planning / PRD**: `internal/` — requirements and product decisions.
 - **SSR & client**: `.cursor/rules/ssr-patterns.mdc` — `import.meta.client`, localStorage, hydration.
 - **State**: `.cursor/rules/state-and-persistence.mdc` — Pinia stores, persistence, composables.
 - **Execution**: `.cursor/rules/execution.mdc` — verification, tests, lint, debugging.
@@ -35,7 +36,7 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 - **Branch reviews**: `.cursor/rules/branch-policy.mdc` — baseline, review structure.
 - **Debugging**: `.cursor/rules/debugging.mdc` — root cause before fixes.
 - **Rules authoring**: `.cursor/rules/rules-authoring.mdc` — when editing `.cursor/rules/*.mdc`.
-- **UI review persona**: `planning/AI Prompts/AI UI Industrial Reviewer.md` — use when reviewing UI/UX like an industrial product designer.
+- **UI review persona**: `internal/AI Prompts/AI UI Industrial Reviewer.md` — use when reviewing UI/UX like an industrial product designer.
 
 ## Commit messages
 

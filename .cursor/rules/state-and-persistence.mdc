@@ -28,4 +28,4 @@ Mirror store changes to `localStorage` with a plugin or `watch` once the persist
 ## Related
 
 - SSR and `localStorage`: `.cursor/rules/ssr-patterns.mdc`
-- Product requirements: `planning/Score Slate PDR.md`
+- Product requirements: `internal/Score Slate PDR.md`
