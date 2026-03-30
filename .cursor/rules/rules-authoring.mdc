@@ -1,0 +1,25 @@
+---
+description: Apply when creating or editing Cursor rules (`.cursor/rules/*.mdc`) — make rules testable and loophole-free.
+alwaysApply: false
+---
+
+## Principle
+
+Treat rule authoring like test-driven documentation: consider when an agent would **violate** the rule (pressure scenarios), then write or refine the rule so it clearly prevents those violations.
+
+## When creating or editing rules
+
+- **Pressure scenarios:** Ask "In what situation would an agent skip or misinterpret this?" (e.g. "I'll run tests later", "this is a one-line change"). Address those cases explicitly in the rule.
+- **Testable:** Prefer concrete, checkable instructions (e.g. "run this command", "save to this path") over vague guidance. Avoid wording that can be rationalized away.
+- **Minimal:** Add only what is needed to fix the targeted violations. Don’t duplicate other rules; reference them (e.g. "see `execution.mdc`").
+- **Judgment calls:** Use rules for behavior that requires judgment or context. If something can be enforced mechanically (e.g. lint, format), prefer automation over documentation.
+
+## What rules are for
+
+- Reusable patterns and conventions that apply across tasks.
+- Not one-off narratives ("how I fixed X once") — those belong in commit messages or planning notes.
+
+## Related
+
+- Existing rules → `.cursor/rules/*.mdc`
+- Product context → `planning/`

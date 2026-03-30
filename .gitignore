@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Nuxt / Vite / build
+.nuxt/
+.output/
+dist/
+.cache/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# Cursor — local plans (optional: remove next line to commit plans)
+.cursor/plans/
+
+# Test / coverage
+coverage/
+
+# IDE (optional)
+.idea/

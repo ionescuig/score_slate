@@ -1,0 +1,60 @@
+---
+description: Branch baseline and PR/branch review — scope, honesty, reproducible feedback, review structure
+alwaysApply: false
+---
+
+## Branch policy
+
+### Branch baseline
+
+- Use the repository’s default branch as the comparison baseline for PRs and reviews (often `main` or `develop`). If unsure, ask once or check `git symbolic-ref refs/remotes/origin/HEAD` / remote default on GitHub.
+- When comparing the current branch (diffs, PR scope, "what changed"), use that baseline consistently — not an arbitrary branch.
+
+**Examples:** `git diff <baseline>`, `git log <baseline>..HEAD`; when describing a PR: compare against `<baseline>`.
+
+---
+
+### Branch / PR review
+
+When reviewing a branch or PR (e.g. producing a review document in `TODO/` or inline feedback):
+
+**Baseline and scope**
+
+- **Baseline:** Use the repo default (see above). Review only what the branch adds or changes vs baseline.
+- **Scope:** Review **committed** changes vs baseline (`git diff <baseline>..HEAD`). Exclude unpushed or working-tree files unless the user explicitly asks to include them.
+- **Rules and docs:** Check the branch against project rules (`.cursor/rules/`), `planning/`, and `docs/` when present. Call out violations or gaps.
+- **Evidence-based:** Base feedback on the actual diff and code you read. Do not invent or assume issues. Where helpful, include examples (code snippets, file:line references).
+
+**Honesty and restraint**
+
+- **Do not hallucinate.** Only report issues you actually find. There may be no must-fix items; say so clearly.
+- **Do not over-escalate.** Reserve "must fix" for real, blocking issues (e.g. debug logging in production path, clear bugs, security). Use "optional" or "consider" for improvements, refactors, tests, or docs that are valuable but not required for merge.
+- **Separate actionable from optional.** Label feedback as either actionable (must fix before merge) or optional / non-blocking. Avoid turning every suggestion into a must-fix.
+
+**Reproducible feedback**
+
+For each issue (actionable or optional), make it reproducible so the author can verify and fix:
+
+- **Steps to reproduce** — How to see the issue (e.g. run X, open Y, click Z).
+- **Expected result** — What should happen per rules/docs or intended behavior.
+- **Actual result** — What happens (or what the code does) instead.
+- **Other relevant info** — Environment, branch, file/line if not obvious.
+- **Fix** — Short, concrete suggestion (file + what to do).
+
+**Lint and tests**
+
+- Optionally run lint/tests if the user asked for a pre-merge check; otherwise assume CI may run them. Do not claim green without running commands if you were asked to verify.
+
+**Review output structure**
+
+Use a consistent structure:
+
+1. **Summary of changes** — What the branch does in a few bullets.
+2. **What works well** — Positive notes: patterns, consistency, types, docs, reuse.
+3. **Actionable feedback** — Must-fix items only; each in reproducible form (steps, expected, actual, fix).
+4. **Optional / non-blocking** — Nice-to-haves. Explicitly state these are not required for merge.
+5. **Verdict** — One or two sentences: how many must-fix items, and that the rest is optional or clean.
+
+**Where to save reviews**
+
+- Save branch/PR review documents under `TODO/` with a clear name (e.g. `branch-review-<branch-name>.md`).

@@ -1,0 +1,91 @@
+---
+description: Use for non-trivial features — produce an implementation plan. Apply when creating or planning new functionality.
+alwaysApply: false
+---
+
+## When to use
+
+- **Writing plans:** When you have a clear spec or approved design for a multi-step task — produce a concrete implementation plan.
+
+---
+
+## User stories first
+
+Before writing the plan, derive user stories from the ticket or requirement:
+
+- Write 3–5 stories in the form: *As a [role], I want [action], so that [outcome].*
+- Include at least one negative case: *As a [role], I should NOT be able to [action].*
+- If the ticket already contains clear user stories, verify they cover the above and proceed.
+
+These stories drive component behavior, store shape, and test cases.
+
+---
+
+## Test-driven execution (every task)
+
+Plans are executed with **TDD** by default. Follow `.agents/skills/tdd/SKILL.md` for philosophy, anti-patterns, and the per-cycle checklist.
+
+**Vertical slices only:** each behaviour is **one failing test → minimal implementation → pass** (RED → GREEN). Do not write the full test suite for the feature and then implement everything (horizontal slice).
+
+**Per task:**
+
+- **RED:** Add or change **one** test (or one focused `it` block) that describes observable behaviour through a **public** interface; run tests and confirm it **fails** for the right reason.
+- **GREEN:** Write the smallest change that makes that test pass; run tests and confirm **pass**.
+- **REFACTOR:** When the suite is green, clean up within the same task or as a dedicated follow-up task; **never refactor while RED**.
+
+**Task sizing:** If a single plan task would cover several behaviours, split it into multiple tasks so each stays one RED→GREEN cycle — or break the task’s **Steps** into numbered RED/GREEN sub-steps in order.
+
+**Exceptions:** Docs-only, config-only, or mechanical moves with no behaviour change may skip new tests; still run verification commands if the plan says so.
+
+---
+
+## Implementation plan
+
+Assume the executor has little context; the plan file is the source of truth. Save plans **in the workspace** to **`.cursor/plans/YYYY-MM-DD-<feature-name>.plan.md`** (under the project root). These are Cursor-specific; keep them out of version control if `.gitignore` excludes `.cursor/plans/`.
+
+**Plan header:**
+
+- **Goal:** One sentence describing what this builds.
+- **Architecture:** 2–3 sentences about approach.
+- Then `---` before tasks.
+
+**Tasks:** Bite-sized (roughly 2–5 minutes each): **one RED→GREEN slice** per task (see **Test-driven execution** above). For each task include:
+
+- **Files:** Create: `path/to/file`; Modify: `path/to/file:start-end`; Test: `tests/path/to/test` (test file touched in RED before GREEN)
+- **Steps:** Numbered steps with exact commands and expected output (e.g. `npm run test -- path/to/test` → Expected: **FAIL** with "…"; then after impl → Expected: **PASS**).
+- **Verification:** Confirm RED then GREEN (or the listed sub-steps) before marking the task done.
+
+Reference `planning/` and existing docs where relevant. Describe changes; no full code. DRY, YAGNI. The user commits; no automated commits.
+
+**Commands:** Use the project's real `package.json` scripts once they exist.
+
+**After all tasks:** Run the full relevant suite to catch regressions; new behaviour should already be covered by tests added during tasks.
+
+**Final step:** Run lint and fix any issues so that changed files pass.
+
+### Executing plans
+
+- **Confirmation preference:** When the user asks to execute a plan (e.g. "do it", "execute the plan"), if they have not already said whether they want step-by-step confirmation or run-through, ask once: "Should I run through all tasks in one go, or pause for your confirmation after each task?" Then proceed accordingly.
+- **Per-task confirmation:** If the user chose to confirm before each task, after completing a task and its verification, ask for confirmation before starting the next task.
+- **Run-through:** If the user chose to run through without confirmation, complete all tasks in sequence without pausing between them.
+
+---
+
+## End of plan: branch review loop
+
+At the end of the plan (after all tasks, tests, and lint are done):
+
+1. **Review** the branch using `.cursor/rules/branch-policy.mdc`. Save the review to `TODO/branch-review-<branch-name>.md` (create `TODO/` if needed).
+2. **Address** all Actionable feedback. Fix each item; re-run tests/lint as needed.
+3. **Delete** the old review file, then run the review again (same rule, same output path).
+4. **Repeat** steps 2–3 until the review has no Actionable feedback. Optional / non-blocking feedback may remain.
+
+---
+
+## Related
+
+- TDD (RED → GREEN, vertical slices) → `.agents/skills/tdd/SKILL.md`
+- Domain glossary → `.agents/skills/ubiquitous-language/SKILL.md`
+- Plan stress-test ("grill me") → `.agents/skills/grill-me/SKILL.md`
+- Branch review (end-of-plan loop) → `.cursor/rules/branch-policy.mdc`
+- State and persistence → `.cursor/rules/state-and-persistence.mdc`

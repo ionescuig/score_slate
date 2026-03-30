@@ -1,0 +1,31 @@
+---
+description: Pinia, localStorage, and composables for local-first game state and player lists
+alwaysApply: false
+---
+
+## Goals
+
+- **Active game:** Scores, rounds, game type, and progression live in Pinia for reactivity and testability.
+- **Recovery and reuse:** Player names and optionally last session sync to `localStorage` (with `import.meta.client` guards — see `ssr-patterns.mdc`).
+- **No backend:** No API routes required for core functionality; PDF export is client-side.
+
+## Stores (target shape — adjust to implementation)
+
+- **`useGameStore` (or equivalent):** Current session — selected game, players in this game, per-round scores, totals, completion state.
+- **`usePlayerStore` (or equivalent):** Master list of player names for quick selection across games.
+
+Mirror store changes to `localStorage` with a plugin or `watch` once the persistence keys and schema are defined. Keep serialization versioned if the shape evolves (e.g. `score-slate-v1`).
+
+## Composables
+
+- Encapsulate game rules (win conditions, trick math, rummy scoring) in pure functions or small composables that stores call — easier to unit test than burying rules in components.
+- Keep pages thin: components display state and dispatch store actions; avoid duplicating scoring logic in templates.
+
+## Testing
+
+- Unit-test scoring helpers and store actions with Vitest; use SSR-safe patterns so tests do not require a full browser unless exercising DOM.
+
+## Related
+
+- SSR and `localStorage`: `.cursor/rules/ssr-patterns.mdc`
+- Product requirements: `planning/Score Slate PDR.md`

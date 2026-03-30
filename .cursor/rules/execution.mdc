@@ -1,0 +1,66 @@
+---
+description: Universal execution guardrails — verification, debugging, testing, docs, UI, tooling.
+alwaysApply: true
+---
+
+## Verification
+
+- Do not claim work is complete, fixed, or passing without running the command that proves it.
+- Before claiming any status: (1) identify the command, (2) run it in full, (3) read the output and exit code, (4) state the result with evidence.
+- Do not use "should work", "probably", or "seems to" in place of actual output.
+- After edits, run the linter diagnostics on every file you changed. Fix any TypeScript/ESLint errors introduced.
+- Final step of non-trivial work: run the project's lint script (e.g. `npm run lint`) and fix issues; report outcome only after seeing output.
+
+## Review and scope control
+
+- Separate findings by severity and merge impact:
+  - `critical` / `high`: block merge until fixed in current PR.
+  - `medium`: fix now if low effort; otherwise create explicit follow-up work.
+  - `low`: optional improvement, do not block merge.
+- Default to the smallest safe change for active PRs. Avoid expanding scope unless the user explicitly asks for broader architecture work.
+- Keep refactor budget tight per PR: at most one structural refactor unless the task is explicitly a redesign.
+- Reuse existing modules/patterns before introducing new abstractions.
+
+## Debugging
+
+- Do not propose fixes before completing root-cause investigation. Symptom fixes are not acceptable.
+- **Phase 1 – Root cause:** Read error messages and stack traces; reproduce consistently; trace data flow.
+- **Phase 2 – Pattern:** Find working examples; compare with the broken path; list differences.
+- **Phase 3 – Hypothesis:** Form one clear hypothesis; make the smallest possible change to test it; verify. If it doesn't hold, form a new hypothesis — do not layer fixes.
+- **Phase 4 – Fix:** Implement a single fix for the root cause; verify the fix and that no other tests break.
+- Stop and ask when blocked. If multiple attempts have failed, question the approach instead of guessing.
+
+## Testing
+
+- For behavior changes (stores, composables, utils, scoring rules), add or adjust tests under `tests/` once the test layout exists.
+- For UI-only changes, add tests when the change affects logic, validation, routing, or persistence.
+- Prefer the smallest test scope that proves the change (unit/integration before E2E).
+- Run the relevant tests for the area you changed.
+
+## Documentation
+
+- When `docs/` exists, keep it in sync with non-trivial implementation changes in the same work session.
+- Until then, record decisions that affect product behavior in `planning/` or the plan file, as appropriate.
+
+## UI
+
+- Prefer Tailwind utility-first styling and existing components in the repo.
+- Follow component layering: base → common → domain where that structure exists.
+- Avoid introducing new UI libraries unless the project already uses them in that area.
+- Prefer responsive layouts that work on laptop, tablet, and mobile; product docs emphasize landscape for dense score grids — see planning.
+- Mirror existing patterns (labels, inputs, buttons, loading states) when adding or changing UI.
+
+## Browser testing
+
+- Use Playwright MCP for browser checks when available.
+- Prefer the already-running dev server (typically `http://localhost:3000`); do not start a second dev server unless none is running.
+
+## Dependencies
+
+- Avoid new dependencies unless necessary; prefer existing utilities and patterns.
+- When adding one, use the project's package manager and prefer the latest stable version compatible with the stack.
+
+## Open Brain
+
+- When Open Brain MCP is available: at task start or planning time, use search/list for prior decisions or preferences that affect implementation.
+- Use `capture_thought` only when the user explicitly asks to save or update memory.

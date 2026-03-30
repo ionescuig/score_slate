@@ -1,0 +1,39 @@
+---
+description: Apply when debugging — test failures, bugs, or unexpected behavior. Root cause before fixes.
+alwaysApply: false
+---
+
+## Principle
+
+**No fixes without root-cause investigation first.** Symptom fixes are failure. Do not propose fixes until you have completed Phase 1.
+
+## Four phases (in order)
+
+1. **Root cause investigation**
+   - Read error messages and stack traces fully (line numbers, paths).
+   - Reproduce consistently; note exact steps.
+   - Check recent changes (git diff, commits, config).
+   - Trace data flow: where does the bad value originate? Fix at source, not at symptom.
+
+2. **Pattern analysis**
+   - Find similar working code in the codebase; compare and list every difference.
+   - If following a reference (e.g. docs or planning notes), read it completely before applying.
+
+3. **Hypothesis and testing**
+   - Form one clear hypothesis ("X is the cause because Y").
+   - Make the smallest change to test it; one variable at a time. If it doesn't work, form a new hypothesis — don't pile on more fixes.
+
+4. **Implementation**
+   - Add a failing test that reproduces the issue when tests exist, then implement a single fix and verify. No "while I'm here" changes.
+   - If the fix doesn't work: if you've already tried 3+ fixes, stop and question the architecture (shared state, coupling, wrong pattern) and discuss with the user before trying more.
+
+## Red flags — stop and return to Phase 1
+
+- "Quick fix for now, investigate later"
+- "Just try changing X and see"
+- Proposing fixes before tracing where the bad value comes from
+- "One more fix" after 2+ failed attempts (after 3, question architecture instead)
+
+## Related
+
+- Verification and testing → `.cursor/rules/execution.mdc`

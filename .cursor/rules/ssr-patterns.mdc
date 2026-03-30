@@ -1,0 +1,57 @@
+---
+description: SSR and client-side patterns — import.meta.client, useState(), localStorage guards, auto-imports
+alwaysApply: false
+---
+
+## SSR and client-side patterns
+
+Nuxt uses SSR by default. Follow these patterns for client-only code and to avoid hydration mismatches.
+
+### Client-only checks
+
+Use `import.meta.client` to guard client-only code:
+
+```typescript
+// Correct: check before accessing localStorage
+if (import.meta.client) {
+  const raw = localStorage.getItem('score-slate-key')
+}
+
+// Wrong: direct localStorage access during SSR
+const raw = localStorage.getItem('score-slate-key')
+```
+
+### localStorage
+
+```typescript
+if (import.meta.client) {
+  localStorage.setItem('key', value)
+  const stored = localStorage.getItem('key')
+}
+```
+
+### Store initialization (Pinia)
+
+```typescript
+if (import.meta.client) {
+  const stored = localStorage.getItem('key')
+  // hydrate store
+}
+```
+
+### State persistence
+
+- **`useState()`**: SSR-safe; shared between server and client where appropriate for URL or navigation-related state.
+- **`ref()`**: Component-local ephemeral UI state.
+- **Pinia**: Use `import.meta.client` for reading/writing `localStorage` during hydration or persistence plugins.
+
+### When to use each
+
+- **`import.meta.client`**: localStorage, `window`, `document`, browser APIs.
+- **`import.meta.server`**: Skip client-only logic; server-only operations.
+- **`useState()`**: State that should persist across navigation in an SSR-safe way when needed.
+- **`ref()`**: Local state that does not need SSR sharing.
+
+### Auto-imports
+
+Nuxt auto-imports from the configured composables directory. Don't add explicit imports unless TypeScript can't resolve the symbol, you need a type-only import, or the symbol comes from outside auto-import paths.
