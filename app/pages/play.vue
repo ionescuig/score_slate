@@ -2,6 +2,11 @@
 import { ArrowDownTrayIcon, PrinterIcon } from '@heroicons/vue/24/outline'
 import { displayTitleForGameType } from '~/utils/game/game-types'
 
+/** Session lives in Pinia + localStorage (client). SSR would render default store and mismatch after hydrate. */
+definePageMeta({
+  ssr: false,
+})
+
 const { isPortrait, canLockOrientation, requestLandscapeLock } =
   useLandscapePresentation()
 
@@ -14,15 +19,31 @@ const winnerNames = computed(() =>
   game.leaderPlayerIds.map((id: string) => game.playerNames[id] ?? id),
 )
 
+/** Avoid hydration mismatch: Pinia + localStorage only exist on client after plugins run. */
+const playReady = ref(false)
+
 onMounted(() => {
   if (game.phase === 'idle') {
-    navigateTo('/')
+    void navigateTo('/')
+    return
   }
+  playReady.value = true
 })
 </script>
 
 <template>
-  <div class="w-full py-6 md:py-8">
+  <div
+    class="w-full py-6 md:py-8"
+    :class="!playReady ? 'min-h-[min(40vh,320px)]' : ''"
+    :aria-busy="!playReady"
+  >
+    <p
+      v-if="!playReady"
+      class="sr-only"
+    >
+      Loading score sheet…
+    </p>
+    <template v-if="playReady">
     <div
       v-if="
         isPortrait &&
@@ -158,6 +179,6 @@ onMounted(() => {
         </template>
       </p>
     </section>
-
+    </template>
   </div>
 </template>

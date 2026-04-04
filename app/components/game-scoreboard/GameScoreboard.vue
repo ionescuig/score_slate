@@ -224,27 +224,6 @@ watch(modalRoundIndex, (ri: number | null) => {
   }
 });
 
-function onGlobalEscape(e: KeyboardEvent) {
-  if (e.key !== "Escape") {
-    return;
-  }
-  if (modalRoundIndex.value === null) {
-    return;
-  }
-  cancelScoreModal();
-}
-
-onMounted(() => {
-  if (import.meta.client) {
-    window.addEventListener("keydown", onGlobalEscape);
-  }
-});
-
-onUnmounted(() => {
-  if (import.meta.client) {
-    window.removeEventListener("keydown", onGlobalEscape);
-  }
-});
 </script>
 
 <template>
@@ -381,18 +360,16 @@ onUnmounted(() => {
       </table>
     </div>
 
-    <ClientOnly>
-      <Teleport to="body">
-        <div
-          v-if="modalRoundIndex !== null"
-          class="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center"
-          role="presentation"
-        >
+    <Teleport to="body">
+      <div
+        v-if="modalRoundIndex !== null"
+        class="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center"
+        role="presentation"
+      >
           <div
             class="absolute inset-0 backdrop-blur-[2px]"
             style="background-color: var(--ss-scrim)"
             aria-hidden="true"
-            @click="cancelScoreModal"
           />
           <div
             ref="modalPanelRef"
@@ -400,7 +377,6 @@ onUnmounted(() => {
             aria-modal="true"
             :aria-labelledby="'score-modal-title'"
             class="relative z-10 flex max-h-[min(90dvh,640px)] w-full max-w-[min(96vw,56rem)] flex-col overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-lift"
-            @click.stop
           >
             <div class="border-b border-gray-200/90 bg-slate-ice/80 px-4 py-3">
               <h2
@@ -530,7 +506,6 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-      </Teleport>
-    </ClientOnly>
+    </Teleport>
   </div>
 </template>

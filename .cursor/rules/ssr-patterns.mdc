@@ -52,6 +52,10 @@ if (import.meta.client) {
 - **`useState()`**: State that should persist across navigation in an SSR-safe way when needed.
 - **`ref()`**: Local state that does not need SSR sharing.
 
+### Hydration vs local-only session state
+
+If a page’s visible content depends entirely on **Pinia hydrated from `localStorage`** (no matching data on the server), SSR will render **default store state** and the client will mismatch after hydrate (e.g. title `"Game"` vs `"Whist"`). Use **`definePageMeta({ ssr: false })`** and **`routeRules`** (e.g. `'/play': { ssr: false }` in `nuxt.config`) — and if mismatches persist (async route shell), **defer rendering** session UI until **`onMounted`** with a `ref` (see `app/pages/play.vue`: `playReady` gates the template so server and first client paint match).
+
 ### Auto-imports
 
 Nuxt auto-imports from the configured composables directory. Don't add explicit imports unless TypeScript can't resolve the symbol, you need a type-only import, or the symbol comes from outside auto-import paths.
