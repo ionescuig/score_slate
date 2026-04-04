@@ -10,6 +10,7 @@ import {
   winnerPlayerIds,
   rummyLimitReached,
 } from '~/utils/game/winners'
+import { randomId } from '~/utils/random-id'
 
 function rowLabelsFor(
   gameType: GameType,
@@ -190,7 +191,7 @@ export const useGameStore = defineStore('game', {
       if (!isPlayerCountValid(gameType, playerIds.length)) {
         throw new Error('Invalid player count for this game')
       }
-      this.sessionId = crypto.randomUUID()
+      this.sessionId = randomId()
       this.gameType = gameType
       this.playerIds = [...playerIds]
       this.playerNames = { ...playerNames }

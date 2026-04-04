@@ -17,6 +17,7 @@ const gameType = computed<GameType | null>(() =>
 
 const selectedIds = ref<string[]>([])
 const newName = ref('')
+const newPlayerNameInput = ref<HTMLInputElement | null>(null)
 /** When checked, use the round count below; when unchecked, play until Finish (no round cap). */
 const rummyLimitRoundCount = ref(false)
 const rummyRounds = ref(15)
@@ -84,8 +85,12 @@ function togglePlayer(id: string) {
 }
 
 function addNew() {
-  playerStore.addPlayer(newName.value)
+  const raw = (newPlayerNameInput.value?.value ?? newName.value).trim()
+  playerStore.addPlayer(raw)
   newName.value = ''
+  if (newPlayerNameInput.value) {
+    newPlayerNameInput.value.value = ''
+  }
 }
 
 function start() {
@@ -186,7 +191,7 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           >
             <button
               type="button"
-              class="w-full min-h-[44px] rounded-xl border border-slate-accent/50 bg-slate-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/20"
+              class="w-full min-h-[44px] touch-manipulation rounded-xl border border-slate-accent/50 bg-slate-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/20"
               :aria-label="`Remove ${p.name} from this game`"
               @click="togglePlayer(p.id)"
             >
@@ -228,7 +233,7 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           >
             <button
               type="button"
-              class="w-full min-h-[44px] rounded-xl border border-gray-200/90 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/10 disabled:cursor-not-allowed disabled:opacity-50"
+              class="w-full min-h-[44px] touch-manipulation rounded-xl border border-gray-200/90 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/10 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="selectedIds.length >= bounds.max"
               :aria-label="
                 selectedIds.length >= bounds.max
@@ -253,16 +258,20 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           @submit.prevent="addNew"
         >
           <input
+            ref="newPlayerNameInput"
             v-model="newName"
             type="text"
             name="new-player"
             placeholder="Add new name"
             autocomplete="name"
+            enterkeyhint="done"
             class="min-h-[44px] min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-slate-900"
+            @keydown.enter.prevent="addNew"
           >
           <button
-            type="submit"
-            class="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-xl border border-slate-300/90 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 sm:w-auto sm:min-w-[5.5rem]"
+            type="button"
+            class="inline-flex min-h-[44px] w-full shrink-0 touch-manipulation items-center justify-center rounded-xl border border-slate-300/90 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 sm:w-auto sm:min-w-[5.5rem]"
+            @click.prevent="addNew"
           >
             Add
           </button>

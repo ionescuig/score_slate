@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { randomId } from '~/utils/random-id'
 
 export interface PlayerEntry {
   id: string
@@ -26,7 +27,7 @@ export const usePlayerStore = defineStore('player', {
       if (exists) {
         return
       }
-      this.players.push({ id: crypto.randomUUID(), name: trimmed })
+      this.players.push({ id: randomId(), name: trimmed })
     },
     removePlayer(id: string) {
       const i = this.players.findIndex((p) => p.id === id)

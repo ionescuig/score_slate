@@ -1,0 +1,10 @@
+{
+  "name": "Score Slate",
+  "short_name": "Score Slate",
+  "description": "Local-first score sheets for tabletop games",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#f4f6f9",
+  "theme_color": "#00cfc8"
+}

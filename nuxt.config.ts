@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
+        { rel: 'manifest', href: '/manifest.webmanifest' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         {
           rel: 'preconnect',

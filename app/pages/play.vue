@@ -2,7 +2,8 @@
 import { ArrowDownTrayIcon, PrinterIcon } from '@heroicons/vue/24/outline'
 import { displayTitleForGameType } from '~/utils/game/game-types'
 
-useLandscapePresentation()
+const { isPortrait, canLockOrientation, requestLandscapeLock } =
+  useLandscapePresentation()
 
 const game = useGameStore()
 const { downloadPdf, printPdf } = useScoreSlatePdf()
@@ -22,6 +23,32 @@ onMounted(() => {
 
 <template>
   <div class="w-full py-6 md:py-8">
+    <div
+      v-if="
+        isPortrait &&
+        (game.phase === 'playing' || game.phase === 'finished')
+      "
+      role="status"
+      class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-accent/35 bg-slate-accent/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="text-sm font-medium text-slate-800">
+        <template v-if="canLockOrientation">
+          Score sheet is easier to use in landscape — rotate your device or tap
+          below to lock.
+        </template>
+        <template v-else>
+          Rotate your device to landscape for the full score sheet.
+        </template>
+      </p>
+      <button
+        v-if="canLockOrientation"
+        type="button"
+        class="inline-flex min-h-[44px] shrink-0 items-center justify-center rounded-xl border border-slate-accent/60 bg-white px-4 text-sm font-semibold text-slate-ink shadow-sm transition-colors hover:bg-slate-accent/15 touch-manipulation"
+        @click="requestLandscapeLock()"
+      >
+        Use landscape
+      </button>
+    </div>
     <header
       class="mb-6 rounded-2xl border border-gray-200/90 bg-white p-5 shadow-soft md:p-6"
       aria-label="Game header"
