@@ -3,6 +3,10 @@ description: Universal execution guardrails — verification, debugging, testing
 alwaysApply: true
 ---
 
+## Git and destructive operations
+
+Follow **Git and destructive operations** in `.cursor/rules/core.mdc` (no commit/push/destructive git without explicit user approval).
+
 ## Verification
 
 - Do not claim work is complete, fixed, or passing without running the command that proves it.

@@ -7,16 +7,16 @@
 - **Next:** Pinia stores with focused tests (actions, getters) using test utils as the app stabilizes.
 - **Components:** test when they encode non-trivial behaviour or validation; skip trivial layout-only SFCs unless regressions appear.
 
-## Layout (target)
-
-Mirror source under `tests/` (exact paths TBD once `app/` / `components/` exist), e.g.:
+## Layout
 
 ```
 tests/
   unit/
-    domain/           # rummy, whist, mexican-train scoring helpers
-    stores/           # optional store tests
-  components/         # as needed
+    domain/       # dealer, mexican-train, whist, winners
+    game/         # pure helpers: persist shape, round visibility, running totals,
+                  # scoreboard row rules, grid view-model build, rummy setup, etc.
+    pdf/          # PDF export payload (pure mapping)
+    stores/       # Pinia player + game
 ```
 
 ## Related

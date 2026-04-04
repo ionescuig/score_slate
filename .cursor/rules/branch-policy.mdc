@@ -16,7 +16,7 @@ alwaysApply: false
 
 ### Branch / PR review
 
-When reviewing a branch or PR (e.g. producing a review document in `TODO/` or inline feedback):
+When reviewing a branch or PR (e.g. producing a review document in `internal/` or inline feedback):
 
 **Baseline and scope**
 
@@ -57,4 +57,4 @@ Use a consistent structure:
 
 **Where to save reviews**
 
-- Save branch/PR review documents under `TODO/` with a clear name (e.g. `branch-review-<branch-name>.md`).
+- Save branch/PR review documents under `internal/` with a clear name (e.g. `branch-review-<branch-name>.md`). This folder holds local product and planning material (often gitignored).

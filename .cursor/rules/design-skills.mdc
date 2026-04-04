@@ -1,0 +1,46 @@
+---
+description: Route UI/design tasks to Impeccable skills under .agents/skills — read SKILL.md before implementing or reviewing.
+alwaysApply: true
+---
+
+## When this applies
+
+If the user (or task) touches **design, UI, UX, visuals, layout, typography, motion, color, copy, accessibility, or “make it look better”** — treat it as a design task. Do **not** improvise generic UI: use the routing below and **read the relevant `SKILL.md` file(s)** at `.agents/skills/<skill-name>/SKILL.md` **before** editing components or giving design review.
+
+Skills come from the [Impeccable](https://impeccable.style/) skill pack (plus project-specific entries). Multiple skills may apply; read all that fit (e.g. **frontend-design** + **arrange** for a new layout-heavy screen).
+
+## Routing (intent → skill folder)
+
+| User / task intent | Skill folder |
+| --- | --- |
+| New screen, component, or substantial UI build; overall design direction | `frontend-design` |
+| Responsive breakpoints, mobile/tablet, touch targets, viewport | `adapt` |
+| Animation, transitions, micro-interactions, motion | `animate` |
+| Layout, spacing, rhythm, alignment, visual hierarchy, crowded UI | `arrange` |
+| Accessibility / performance / theming / anti-patterns audit, scored review | `audit` |
+| Bland, generic, safe, needs more character (without breaking usability) | `bolder` |
+| Labels, errors, microcopy, confusing text | `clarify` |
+| Too gray, needs palette / warmth / color | `colorize` |
+| UX/design review, evaluation, feedback on a design | `critique` |
+| Personality, delight, memorable touches | `delight` |
+| Simplify, declutter, remove noise | `distill` |
+| Extract components, tokens, design-system style reuse | `extract` |
+| Edge cases, overflow, i18n, production hardening | `harden` |
+| Drift from design system, inconsistent spacing/tokens | `normalize` |
+| Onboarding, empty states, first-run | `onboard` |
+| Slow, janky, bundle, performance | `optimize` |
+| Ambitious effects (high effort / “wow”) | `overdrive` |
+| Final pass, alignment, shipping polish | `polish` |
+| Too loud, overwhelming, tone down | `quieter` |
+| Fonts, type scale, readability, hierarchy | `typeset` |
+| One-time design context for the repo | `teach-impeccable` |
+| Domain terminology / glossary (not visual design) | `ubiquitous-language` |
+| Industrial product-design lens (Score Slate) | Prefer `internal/AI Prompts/AI UI Industrial Reviewer.md` together with `critique` or `audit` when reviewing UI |
+
+## Procedure
+
+1. Match intents from the table (and synonyms).
+2. **Read** `SKILL.md` for each selected skill (full path: `.agents/skills/<folder>/SKILL.md`).
+3. Implement or review **following** that skill; default project stack rules (Vue SFCs, Tailwind, etc.) still apply from `core.mdc`.
+
+If nothing matches, start with **`frontend-design`** for build work or **`critique`** for review work.

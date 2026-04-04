@@ -9,7 +9,7 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 
 ## Product context
 
-- Local-first score sheets for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
+- Local-first Score Slate for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
 - Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `internal/Score Slate PDR.md` and `.cursor/rules/state-and-persistence.mdc`.
 - Requirements source: `internal/Score Slate Requirements.md`, `internal/Score Slate PDR.md`.
 
@@ -34,10 +34,25 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 - **Execution**: `.cursor/rules/execution.mdc` — verification, tests, lint, debugging.
 - **Planning workflow**: `.cursor/rules/planning.mdc` — user stories, plan format, TDD slices.
 - **Branch reviews**: `.cursor/rules/branch-policy.mdc` — baseline, review structure.
+- **Git & destructive ops** (commits, push, destructive commands): this file — **Git and destructive operations** below.
 - **Debugging**: `.cursor/rules/debugging.mdc` — root cause before fixes.
 - **Rules authoring**: `.cursor/rules/rules-authoring.mdc` — when editing `.cursor/rules/*.mdc`.
 - **UI review persona**: `internal/AI Prompts/AI UI Industrial Reviewer.md` — use when reviewing UI/UX like an industrial product designer.
+- **Design skills (Impeccable)**: `.cursor/rules/design-skills.mdc` — which `.agents/skills/` to read for UI/design tasks; read `SKILL.md` before implementing or reviewing.
 
 ## Commit messages
 
 Prefer a single imperative subject line (~72 chars). Add a body only when the change set is large or complex.
+
+Do not include tool attribution in commit messages or bodies (e.g. “Made with Cursor”, Co-Authored-By for the editor, or similar).
+
+## Git and destructive operations
+
+Guardrails aligned with **visualisation-frontend** (plans: *the user commits; no automated commits*) and with **remote / destructive** safety expectations. This section is the always-on rule for git and destructive commands in this repo.
+
+- **Commits:** Do not run `git commit` or otherwise create commits unless the user **explicitly** asks to commit in this conversation (e.g. “commit”, “commit this”, “make a commit”). Implementation and plans should leave **ready-to-commit** changes; default is the user commits, unless they ask you to commit.
+- **Remote:** Do not `git push`, force-push, open or merge PRs, or otherwise **update the remote** unless the user explicitly asks or clearly approves in the same turn.
+- **Destructive git:** Do not run commands that discard history or uncommitted work without **explicit** approval — including `git reset --hard`, `git clean -fd`, checkout that overwrites local changes, `git branch -D`, `git push --force` / `--force-with-lease`, or rewrite-history operations. If the user did not ask for that exact risk, ask first.
+- **Destructive shell:** Do not run commands that bulk-delete the project tree, wipe data, or similar (e.g. `rm -rf` on the repo) unless the user explicitly requests that exact operation.
+
+**Plans:** `.cursor/rules/planning.mdc` reiterates *no automated commits* at plan execution time; both apply.

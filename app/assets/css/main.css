@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Resume Optimiser palette (app/assets/css/main.css) — light shell only, no dark hero */
+  --ss-page: #f9fafb;
+  --ss-bg: #ffffff;
+  --ss-ink: #0f2942;
+  --ss-ink-muted: #19436b;
+  --ss-accent: #00cfc8;
+  --ss-accent-deep: #00b8b0;
+  --ss-accent-bright: #03fff6;
+  --ss-danger-gradient: linear-gradient(to right, #f87171, #fda4af, #fecaca);
+  --ss-muted: #4b5563;
+  --ss-mint: #ecfeff;
+  --ss-mint-soft: rgb(236 254 255 / 0.72);
+  --ss-frost: #e6f3ff;
+  --ss-ice-wash: #eff6ff;
+  --ss-sky-tint: #e0f2fe;
+  --ss-ice: rgb(230 243 255 / 0.55);
+  --ss-table-grid: #7ec9c5;
+  --ss-table-head: #e6fffd;
+  --ss-table-foot: #ccfbf7;
+  --ss-table-dealer: #f0fdfa;
+  /* Light scrim for modals — navy ink, not slate-900 */
+  --ss-scrim: rgb(15 41 66 / 0.22);
+}
+
+html {
+  background: var(--ss-page);
+  color: var(--ss-ink);
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+/* Keyboard / field-use: visible focus (industrial UI: high-contrast, calm ring) */
+@layer base {
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 2px;
+  }
+
+  input[type='text']:focus-visible,
+  input[type='number']:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 0;
+    border-color: var(--ss-accent-deep);
+  }
+
+  input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 2px;
+  }
+}

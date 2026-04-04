@@ -55,7 +55,7 @@ Assume the executor has little context; the plan file is the source of truth. Sa
 - **Steps:** Numbered steps with exact commands and expected output (e.g. `npm run test -- path/to/test` → Expected: **FAIL** with "…"; then after impl → Expected: **PASS**).
 - **Verification:** Confirm RED then GREEN (or the listed sub-steps) before marking the task done.
 
-Reference `internal/` and existing docs where relevant. Describe changes; no full code. DRY, YAGNI. The user commits; no automated commits.
+Reference `internal/` and existing docs where relevant. Describe changes; no full code. DRY, YAGNI. The user commits; no automated commits (same rule as **Git and destructive operations** in `.cursor/rules/core.mdc`).
 
 **Commands:** Use the project's real `package.json` scripts once they exist.
 
@@ -75,7 +75,7 @@ Reference `internal/` and existing docs where relevant. Describe changes; no ful
 
 At the end of the plan (after all tasks, tests, and lint are done):
 
-1. **Review** the branch using `.cursor/rules/branch-policy.mdc`. Save the review to `TODO/branch-review-<branch-name>.md` (create `TODO/` if needed).
+1. **Review** the branch using `.cursor/rules/branch-policy.mdc`. Save the review to `internal/branch-review-<branch-name>.md` (use `internal/` for local planning alongside requirements; create the folder if needed).
 2. **Address** all Actionable feedback. Fix each item; re-run tests/lint as needed.
 3. **Delete** the old review file, then run the review again (same rule, same output path).
 4. **Repeat** steps 2–3 until the review has no Actionable feedback. Optional / non-blocking feedback may remain.
