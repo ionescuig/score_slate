@@ -1,7 +1,7 @@
 {
   "name": "Score Slate",
   "short_name": "Score Slate",
-  "description": "Local-first score sheets for tabletop games",
+  "description": "Local-first Score Slate for tabletop games",
   "start_url": "/",
   "display": "standalone",
   "orientation": "landscape",

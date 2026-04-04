@@ -37,40 +37,55 @@ onMounted(() => {
     :class="!playReady ? 'min-h-[min(40vh,320px)]' : ''"
     :aria-busy="!playReady"
   >
-    <p v-if="!playReady" class="sr-only">Loading score sheet…</p>
+    <p v-if="!playReady" class="sr-only">Loading Score Slate…</p>
     <template v-if="playReady">
       <div
         v-if="
-          isPortrait && (game.phase === 'playing' || game.phase === 'finished')
+          !game.playPortraitHintDismissed &&
+          isPortrait &&
+          (game.phase === 'playing' || game.phase === 'finished')
         "
         role="status"
-        class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-accent/35 bg-slate-accent/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+        class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-accent/35 bg-slate-accent/10 px-4 py-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
       >
-        <p class="text-sm font-medium text-slate-800">
+        <p class="min-w-0 text-sm font-medium text-slate-800">
           <template v-if="canLockOrientation">
-            Score sheet is easier to use in landscape — rotate your device or
+            Score Slate is easier to use in landscape — rotate your device or
             tap below to lock.
           </template>
           <template v-else>
-            Rotate your device to landscape for the full score sheet.
+            Rotate your device to landscape for the full Score Slate.
           </template>
         </p>
-        <SlateButton
-          v-if="canLockOrientation"
-          variant="default"
-          density="compact"
-          label-tone="ink"
-          @click="requestLandscapeLock()"
+        <div
+          class="flex flex-wrap items-center justify-end gap-2 sm:shrink-0"
         >
-          Use landscape
-        </SlateButton>
+          <SlateButton
+            v-if="canLockOrientation"
+            variant="default"
+            density="compact"
+            label-tone="ink"
+            @click="requestLandscapeLock()"
+          >
+            Use landscape
+          </SlateButton>
+          <SlateButton
+            variant="default"
+            density="compact"
+            label-tone="muted"
+            aria-label="Stay in portrait; hide until a new game or Discard session"
+            @click="game.dismissPlayPortraitHint()"
+          >
+            Ignore
+          </SlateButton>
+        </div>
       </div>
       <header
         class="mb-6 rounded-2xl border border-slate-accent/30 bg-white p-5 shadow-soft md:p-6"
         aria-labelledby="play-game-title"
       >
         <div
-          class="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-stretch"
+          class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-stretch"
         >
           <div class="min-w-0">
             <nav aria-label="Site">
@@ -121,12 +136,12 @@ onMounted(() => {
           </div>
           <div
             v-if="game.phase === 'playing' || game.phase === 'finished'"
-            class="flex w-full flex-col items-end gap-3 md:min-h-0 md:justify-between md:gap-0"
+            class="flex w-full flex-col items-end gap-3 sm:min-h-0 sm:justify-between sm:gap-0"
           >
             <div
               class="flex shrink-0 items-center gap-2"
               role="toolbar"
-              aria-label="Score sheet export"
+              aria-label="Score Slate export"
             >
               <SlateButton
                 type="button"
@@ -144,7 +159,7 @@ onMounted(() => {
                 type="button"
                 variant="default"
                 size="icon"
-                aria-label="Print score sheet"
+                aria-label="Print Score Slate"
                 @click="printPdf"
               >
                 <PrinterIcon class="h-5 w-5 shrink-0" aria-hidden="true" />

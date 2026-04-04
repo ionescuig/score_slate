@@ -41,7 +41,7 @@ function newGame() {
       <p
         class="mt-6 max-w-full text-base leading-relaxed text-slate-inkMuted md:text-lg md:whitespace-nowrap"
       >
-        Local score sheets for tabletop games — no accounts.
+        Score Slate — local scorekeeping for tabletop games. No accounts.
       </p>
     </header>
 

@@ -40,6 +40,8 @@ export const useGameStore = defineStore('game', {
     rummyLimit: null as number | null,
     /** Rummy only: false = play until Finish (rounds grow with Next round). */
     rummyHasRoundLimit: true,
+    /** Play page: hide portrait→landscape banner until a new session (start or discard). */
+    playPortraitHintDismissed: false,
   }),
   getters: {
     runningTotals(state): Record<string, number> {
@@ -53,7 +55,7 @@ export const useGameStore = defineStore('game', {
           continue
         }
         for (const pid of state.playerIds) {
-          totals[pid] += row[pid] ?? 0
+          totals[pid] = (totals[pid] ?? 0) + (row[pid] ?? 0)
         }
       }
       return totals
@@ -126,6 +128,7 @@ export const useGameStore = defineStore('game', {
         phase: 'idle' | 'playing' | 'finished'
         rummyLimit: number | null
         rummyHasRoundLimit?: boolean
+        playPortraitHintDismissed?: boolean
       }>
       if (d.sessionId != null) {
         this.sessionId = d.sessionId
@@ -164,6 +167,9 @@ export const useGameStore = defineStore('game', {
       } else if (d.gameType === 'rummy') {
         this.rummyHasRoundLimit = true
       }
+      if (typeof d.playPortraitHintDismissed === 'boolean') {
+        this.playPortraitHintDismissed = d.playPortraitHintDismissed
+      }
     },
     resetSession() {
       this.sessionId = null
@@ -177,6 +183,10 @@ export const useGameStore = defineStore('game', {
       this.phase = 'idle'
       this.rummyLimit = null
       this.rummyHasRoundLimit = true
+      this.playPortraitHintDismissed = false
+    },
+    dismissPlayPortraitHint() {
+      this.playPortraitHintDismissed = true
     },
     startGame(options: {
       gameType: GameType
@@ -191,6 +201,7 @@ export const useGameStore = defineStore('game', {
       if (!isPlayerCountValid(gameType, playerIds.length)) {
         throw new Error('Invalid player count for this game')
       }
+      this.playPortraitHintDismissed = false
       this.sessionId = randomId()
       this.gameType = gameType
       this.playerIds = [...playerIds]

@@ -9,7 +9,7 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 
 ## Product context
 
-- Local-first score sheets for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
+- Local-first Score Slate for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
 - Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `internal/Score Slate PDR.md` and `.cursor/rules/state-and-persistence.mdc`.
 - Requirements source: `internal/Score Slate Requirements.md`, `internal/Score Slate PDR.md`.
 

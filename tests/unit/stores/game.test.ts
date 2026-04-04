@@ -231,4 +231,37 @@ describe('useGameStore', () => {
     expect(g.phase).toBe('playing')
     expect(g.currentRoundIndex).toBe(1)
   })
+
+  it('dismissPlayPortraitHint sets flag; resetSession and startGame clear it', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    expect(g.playPortraitHintDismissed).toBe(false)
+    g.dismissPlayPortraitHint()
+    expect(g.playPortraitHintDismissed).toBe(true)
+    g.resetSession()
+    expect(g.playPortraitHintDismissed).toBe(false)
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    g.dismissPlayPortraitHint()
+    expect(g.playPortraitHintDismissed).toBe(true)
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    expect(g.playPortraitHintDismissed).toBe(false)
+  })
 })
