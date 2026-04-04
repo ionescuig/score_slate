@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TrashIcon } from '@heroicons/vue/24/outline'
 import {
   GAME_PLAYER_BOUNDS,
   displayTitleForGameType,
@@ -91,6 +92,15 @@ function addNew() {
   if (newPlayerNameInput.value) {
     newPlayerNameInput.value.value = ''
   }
+}
+
+/** Drop from this game if selected, then remove from saved names (local list). */
+function removeFromSaved(id: string) {
+  const i = selectedIds.value.indexOf(id)
+  if (i >= 0) {
+    selectedIds.value.splice(i, 1)
+  }
+  playerStore.removePlayer(id)
 }
 
 function start() {
@@ -201,14 +211,27 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           <li
             v-for="p in activePlayers"
             :key="p.id"
+            class="flex min-h-[44px] gap-2"
           >
             <button
               type="button"
-              class="w-full min-h-[44px] touch-manipulation rounded-xl border border-slate-accent/50 bg-slate-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/20"
+              class="min-w-0 flex-1 touch-manipulation rounded-xl border border-slate-accent/50 bg-slate-accent/10 px-3 py-2.5 text-left text-sm font-semibold text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/20"
               :aria-label="`Remove ${p.name} from this game`"
               @click="togglePlayer(p.id)"
             >
               {{ p.name }}
+            </button>
+            <button
+              type="button"
+              class="inline-flex size-[44px] shrink-0 touch-manipulation items-center justify-center rounded-xl border border-red-200/90 bg-red-50/90 text-red-600 shadow-sm transition-colors hover:border-red-400/90 hover:bg-red-100 hover:text-red-700"
+              :aria-label="`Remove ${p.name} from saved names`"
+              :title="`Remove ${p.name} from saved names`"
+              @click="removeFromSaved(p.id)"
+            >
+              <TrashIcon
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </li>
         </ul>
@@ -243,10 +266,11 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           <li
             v-for="p in poolPlayers"
             :key="p.id"
+            class="flex min-h-[44px] gap-2"
           >
             <button
               type="button"
-              class="w-full min-h-[44px] touch-manipulation rounded-xl border border-gray-200/90 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/10 disabled:cursor-not-allowed disabled:opacity-50"
+              class="min-w-0 flex-1 touch-manipulation rounded-xl border border-gray-200/90 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-ink shadow-sm transition-colors hover:border-slate-accent hover:bg-slate-accent/10 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="selectedIds.length >= bounds.max"
               :aria-label="
                 selectedIds.length >= bounds.max
@@ -256,6 +280,18 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
               @click="togglePlayer(p.id)"
             >
               {{ p.name }}
+            </button>
+            <button
+              type="button"
+              class="inline-flex size-[44px] shrink-0 touch-manipulation items-center justify-center rounded-xl border border-red-200/90 bg-red-50/90 text-red-600 shadow-sm transition-colors hover:border-red-400/90 hover:bg-red-100 hover:text-red-700"
+              :aria-label="`Remove ${p.name} from saved names`"
+              :title="`Remove ${p.name} from saved names`"
+              @click="removeFromSaved(p.id)"
+            >
+              <TrashIcon
+                class="size-5"
+                aria-hidden="true"
+              />
             </button>
           </li>
         </ul>
