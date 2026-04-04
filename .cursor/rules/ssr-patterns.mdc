@@ -56,6 +56,8 @@ if (import.meta.client) {
 
 If a page’s visible content depends entirely on **Pinia hydrated from `localStorage`** (no matching data on the server), SSR will render **default store state** and the client will mismatch after hydrate (e.g. title `"Game"` vs `"Whist"`). Use **`definePageMeta({ ssr: false })`** and **`routeRules`** (e.g. `'/play': { ssr: false }` in `nuxt.config`) — and if mismatches persist (async route shell), **defer rendering** session UI until **`onMounted`** with a `ref` (see `app/pages/play.vue`: `playReady` gates the template so server and first client paint match).
 
+**Persisted named players:** `persist.client.ts` may fill the player store before the first client paint. For setup pages that branch on `playerStore.players.length`, treat the list as empty until **`onMounted`** (see `app/pages/setup/[game].vue`: `setupMounted` + `playersForSetupUi`) so SSR and hydration match.
+
 ### Auto-imports
 
 Nuxt auto-imports from the configured composables directory. Don't add explicit imports unless TypeScript can't resolve the symbol, you need a type-only import, or the symbol comes from outside auto-import paths.

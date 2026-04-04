@@ -37,7 +37,18 @@ const canStart = computed(() => {
   return n >= bounds.value.min && n <= bounds.value.max
 })
 
+/**
+ * Empty until client mount so the first paint matches SSR. `persist.client.ts` restores
+ * players before hydration, which would otherwise mismatch empty-state copy and Saved column.
+ */
+const setupMounted = ref(false)
+
+const playersForSetupUi = computed(() =>
+  setupMounted.value ? playerStore.players : [],
+)
+
 onMounted(() => {
+  setupMounted.value = true
   if (!gameType.value) {
     navigateTo('/')
   }
@@ -53,7 +64,7 @@ watch(rummyLimitRoundCount, (on: boolean) => {
 const activePlayers = computed(() => {
   const list: PlayerEntry[] = []
   for (const id of selectedIds.value) {
-    const p = playerStore.players.find((x: PlayerEntry) => x.id === id)
+    const p = playersForSetupUi.value.find((x: PlayerEntry) => x.id === id)
     if (p) {
       list.push(p)
     }
@@ -62,7 +73,7 @@ const activePlayers = computed(() => {
 })
 
 const poolPlayers = computed(() =>
-  playerStore.players
+  playersForSetupUi.value
     .filter((p: PlayerEntry) => !selectedIds.value.includes(p.id))
     .slice()
     .sort((a: PlayerEntry, b: PlayerEntry) =>
@@ -197,7 +208,7 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           v-if="activePlayers.length === 0"
           class="mt-3 rounded-lg border border-dashed border-gray-300 bg-slate-rail px-3 py-4 text-sm text-slate-600"
         >
-          <template v-if="playerStore.players.length === 0">
+          <template v-if="playersForSetupUi.length === 0">
             Add names with the form below on the right, then tap them from Saved to add them here.
           </template>
           <template v-else>
@@ -248,7 +259,7 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
           Saved
         </h3>
         <p
-          v-if="playerStore.players.length === 0"
+          v-if="playersForSetupUi.length === 0"
           class="mt-3 rounded-lg border border-dashed border-gray-300 bg-white px-3 py-4 text-sm text-slate-600"
         >
           No saved names yet — use Add new below.
