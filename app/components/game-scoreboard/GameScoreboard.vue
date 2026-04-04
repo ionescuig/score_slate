@@ -129,7 +129,7 @@ function whistSectionTopBorder(ri: number): string {
     return "";
   }
   return whistRowStartsSection(ri, game.playerIds.length)
-    ? "border-t-2 border-t-gray-200"
+    ? "border-t-2 border-t-slate-gridline"
     : "";
 }
 
@@ -238,23 +238,22 @@ watch(modalRoundIndex, (ri: number | null) => {
     });
   }
 });
-
 </script>
 
 <template>
   <div
-    class="w-full overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-soft"
+    class="w-full overflow-hidden rounded-2xl border-2 border-slate-accent/35 bg-white shadow-soft"
   >
     <p
       v-if="game.phase === 'playing'"
-      class="border-b border-gray-200/80 bg-slate-rail px-4 py-2 text-xs text-slate-600"
+      class="border-b border-slate-gridline/80 bg-slate-rail px-4 py-2 text-xs font-medium text-slate-700"
     >
       Tap the highlighted row to enter scores, or a row above to fix a past
       round.
     </p>
     <p
       v-else-if="game.phase === 'finished'"
-      class="border-b border-gray-200/80 bg-slate-rail px-4 py-2 text-xs text-slate-600"
+      class="border-b border-slate-gridline/80 bg-slate-rail px-4 py-2 text-xs font-medium text-slate-700"
     >
       Tap any round row to edit scores.
     </p>
@@ -266,14 +265,14 @@ watch(modalRoundIndex, (ri: number | null) => {
           Totals are running sums.
         </caption>
         <colgroup>
-          <col class="w-[5rem] sm:w-[5.5rem]">
-          <col v-for="pid in game.playerIds" :key="`colgroup-${pid}`">
+          <col class="w-[5rem] sm:w-[5.5rem]" />
+          <col v-for="pid in game.playerIds" :key="`colgroup-${pid}`" />
         </colgroup>
         <thead>
           <tr>
             <th
               scope="col"
-              class="border border-gray-200 bg-gray-50 px-1.5 py-2 text-center text-xs font-semibold text-slate-inkMuted"
+              class="border border-slate-gridline bg-slate-headFill px-1.5 py-2 text-center text-xs font-semibold text-slate-inkMuted"
             >
               <span class="sr-only">Round</span>
             </th>
@@ -286,8 +285,8 @@ watch(modalRoundIndex, (ri: number | null) => {
                 isLeaderColumn(pid)
                   ? 'border-slate-accent/80 bg-slate-accent/8 text-slate-ink ring-1 ring-slate-accent/70'
                   : isDealerColumn(pid)
-                    ? 'border-slate-200/90 bg-slate-50/80 text-slate-ink'
-                    : 'border-gray-200 bg-gray-50 text-slate-ink'
+                    ? 'border-slate-gridline/90 bg-slate-dealerFill text-slate-ink'
+                    : 'border-slate-gridline bg-slate-headFill text-slate-ink'
               "
             >
               <span class="block font-semibold">{{
@@ -295,7 +294,7 @@ watch(modalRoundIndex, (ri: number | null) => {
               }}</span>
               <span
                 v-if="isDealerColumn(pid)"
-                class="mt-1 block text-[10px] font-normal uppercase tracking-wide text-slate-500"
+                class="mt-1 block text-[10px] font-normal uppercase tracking-wide text-slate-600"
                 >Dealer</span
               >
               <span
@@ -322,7 +321,7 @@ watch(modalRoundIndex, (ri: number | null) => {
           >
             <th
               scope="row"
-              class="border border-gray-200 bg-gray-50 px-1.5 py-1.5 text-center text-xs font-medium tabular-nums leading-tight text-slate-700"
+              class="border border-slate-gridline bg-slate-headFill px-1.5 py-1.5 text-center text-xs font-semibold tabular-nums leading-tight text-slate-800"
               :class="whistSectionTopBorder(ri)"
             >
               {{ rowLabelForIndex(ri) }}
@@ -335,8 +334,8 @@ watch(modalRoundIndex, (ri: number | null) => {
                 isLeaderColumn(pid)
                   ? 'border-slate-accent/35 bg-slate-accent/[0.06] text-slate-800'
                   : isDealerColumn(pid)
-                    ? 'border-slate-200/80 bg-slate-50/55 text-slate-800'
-                    : 'border-gray-200 text-slate-800',
+                    ? 'border-slate-gridline/85 bg-slate-dealerFill/90 text-slate-800'
+                    : 'border-slate-gridline bg-white text-slate-800',
                 whistSectionTopBorder(ri),
               ]"
             >
@@ -359,14 +358,14 @@ watch(modalRoundIndex, (ri: number | null) => {
           <tr>
             <th
               scope="row"
-              class="border border-gray-300 bg-gray-100 px-1.5 py-2 text-center text-xs font-semibold text-slate-ink"
+              class="border border-slate-gridline bg-slate-footFill px-1.5 py-2 text-center text-xs font-semibold text-slate-ink"
             >
               Total
             </th>
             <td
               v-for="pid in game.playerIds"
               :key="`t-${pid}`"
-              class="min-w-0 border border-gray-300 bg-gray-100 px-2 py-2 text-center text-sm font-semibold text-slate-ink"
+              class="min-w-0 border border-slate-gridline bg-slate-footFill px-2 py-2 text-center text-sm font-semibold text-slate-ink"
             >
               {{ game.runningTotals[pid] ?? 0 }}
             </td>
@@ -381,146 +380,147 @@ watch(modalRoundIndex, (ri: number | null) => {
         class="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center"
         role="presentation"
       >
+        <div
+          class="absolute inset-0 backdrop-blur-[2px]"
+          style="background-color: var(--ss-scrim)"
+          aria-hidden="true"
+        />
+        <div
+          ref="modalPanelRef"
+          role="dialog"
+          aria-modal="true"
+          :aria-labelledby="'score-modal-title'"
+          class="relative z-10 flex max-h-[min(90dvh,640px)] w-full max-w-[min(96vw,56rem)] flex-col overflow-hidden rounded-2xl border border-slate-gridline/90 bg-white shadow-lift"
+        >
           <div
-            class="absolute inset-0 backdrop-blur-[2px]"
-            style="background-color: var(--ss-scrim)"
-            aria-hidden="true"
-          />
-          <div
-            ref="modalPanelRef"
-            role="dialog"
-            aria-modal="true"
-            :aria-labelledby="'score-modal-title'"
-            class="relative z-10 flex max-h-[min(90dvh,640px)] w-full max-w-[min(96vw,56rem)] flex-col overflow-hidden rounded-2xl border border-gray-200/90 bg-white shadow-lift"
+            class="border-b border-slate-gridline/85 bg-slate-ice/90 px-4 py-3"
           >
-            <div class="border-b border-gray-200/90 bg-slate-ice/80 px-4 py-3">
-              <h2
-                id="score-modal-title"
-                class="font-display text-lg font-semibold text-slate-ink"
-              >
-                {{ rowLabelForIndex(modalRoundIndex) }}
-              </h2>
-              <p class="mt-0.5 text-xs text-slate-500">
-                <template v-if="isEditingPastOrFinishedRound">
-                  Edit scores, then tap Done.
-                </template>
-                <template v-else>
-                  Enter this round for everyone, then tap Done. The next round
-                  starts when this one is complete.
-                </template>
-              </p>
-            </div>
-            <div
-              class="min-h-0 flex-1 overflow-y-auto overflow-x-auto px-4 py-4"
+            <h2
+              id="score-modal-title"
+              class="font-display text-lg font-semibold text-slate-ink"
             >
-              <table class="w-full min-w-[480px] border-collapse text-sm">
-                <caption class="sr-only">
-                  Scores for this round: one column per player, rows before,
-                  this round, after.
-                </caption>
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      class="border border-gray-200 bg-gray-50 px-2 py-2 text-left text-xs font-semibold text-slate-inkMuted"
-                    >
-                      <span class="sr-only">Metric</span>
-                    </th>
-                    <th
-                      v-for="pid in game.playerIds"
-                      :key="`mh-${pid}`"
-                      scope="col"
-                      class="border border-gray-200 bg-gray-50 px-2 py-2 text-center text-xs font-semibold text-slate-ink"
-                    >
-                      {{ game.playerNames[pid] }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th
-                      scope="row"
-                      class="border border-gray-200 bg-gray-50 px-2 py-2 text-left text-xs font-medium text-slate-700"
-                    >
-                      Total before
-                    </th>
-                    <td
-                      v-for="pid in game.playerIds"
-                      :key="`tb-${pid}`"
-                      class="border border-slate-200 px-2 py-2 text-center tabular-nums text-slate-700"
-                    >
-                      {{ totalBeforeRound(modalRoundIndex, pid) }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th
-                      scope="row"
-                      class="border border-slate-200 bg-white px-2 py-2 text-left text-xs font-medium text-slate-600"
-                    >
-                      This round
-                    </th>
-                    <td
-                      v-for="pid in game.playerIds"
-                      :key="`tr-${pid}`"
-                      class="border border-slate-200 px-1 py-1.5"
-                    >
-                      <label class="sr-only" :for="`round-score-${pid}`">
-                        {{ game.playerNames[pid] }}, this round
-                      </label>
-                      <input
-                        :id="`round-score-${pid}`"
-                        type="number"
-                        inputmode="numeric"
-                        class="min-h-[44px] w-full min-w-[3.25rem] rounded border border-slate-300 bg-white px-2 py-1.5 text-center tabular-nums text-slate-900"
-                        :value="modalCell(pid)"
-                        :aria-label="`${game.playerNames[pid]}, ${rowLabelForIndex(modalRoundIndex)}`"
-                        @input="
-                          updateScore(
-                            pid,
-                            ($event.target as HTMLInputElement).value,
-                          )
-                        "
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <th
-                      scope="row"
-                      class="border border-gray-200 bg-gray-50 px-2 py-2 text-left text-xs font-medium text-slate-800"
-                    >
-                      Total after
-                    </th>
-                    <td
-                      v-for="pid in game.playerIds"
-                      :key="`ta-${pid}`"
-                      class="border border-gray-200 bg-gray-50 px-2 py-2 text-center text-sm font-semibold tabular-nums text-slate-ink"
-                    >
-                      {{ projectedTotalThroughRound(modalRoundIndex, pid) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div
-              class="flex flex-wrap justify-end gap-2 border-t border-gray-200/90 bg-slate-rail px-4 py-4"
+              {{ rowLabelForIndex(modalRoundIndex) }}
+            </h2>
+            <p class="mt-0.5 text-xs text-slate-600">
+              <template v-if="isEditingPastOrFinishedRound">
+                Edit scores, then tap Done.
+              </template>
+              <template v-else>
+                Enter this round for everyone, then tap Done. The next round
+                starts when this one is complete.
+              </template>
+            </p>
+          </div>
+          <div class="min-h-0 flex-1 overflow-y-auto overflow-x-auto px-4 py-4">
+            <table class="w-full min-w-[480px] border-collapse text-sm">
+              <caption class="sr-only">
+                Scores for this round: one column per player, rows before, this
+                round, after.
+              </caption>
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-left text-xs font-semibold text-slate-inkMuted"
+                  >
+                    <span class="sr-only">Metric</span>
+                  </th>
+                  <th
+                    v-for="pid in game.playerIds"
+                    :key="`mh-${pid}`"
+                    scope="col"
+                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink"
+                  >
+                    {{ game.playerNames[pid] }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th
+                    scope="row"
+                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-left text-xs font-medium text-slate-800"
+                  >
+                    Total before
+                  </th>
+                  <td
+                    v-for="pid in game.playerIds"
+                    :key="`tb-${pid}`"
+                    class="border border-slate-gridline bg-white px-2 py-2 text-center tabular-nums text-slate-800"
+                  >
+                    {{ totalBeforeRound(modalRoundIndex, pid) }}
+                  </td>
+                </tr>
+                <tr>
+                  <th
+                    scope="row"
+                    class="border border-slate-gridline bg-slate-mint/50 px-2 py-2 text-left text-xs font-semibold text-slate-800"
+                  >
+                    This round
+                  </th>
+                  <td
+                    v-for="pid in game.playerIds"
+                    :key="`tr-${pid}`"
+                    class="border border-slate-gridline bg-slate-mint/35 px-1 py-1.5"
+                  >
+                    <label class="sr-only" :for="`round-score-${pid}`">
+                      {{ game.playerNames[pid] }}, this round
+                    </label>
+                    <input
+                      :id="`round-score-${pid}`"
+                      type="number"
+                      inputmode="numeric"
+                      class="min-h-[44px] w-full min-w-[3.25rem] rounded border border-slate-gridline bg-white px-2 py-1.5 text-center tabular-nums text-slate-900 shadow-sm"
+                      :value="modalCell(pid)"
+                      :aria-label="`${game.playerNames[pid]}, ${rowLabelForIndex(modalRoundIndex)}`"
+                      @input="
+                        updateScore(
+                          pid,
+                          ($event.target as HTMLInputElement).value,
+                        )
+                      "
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th
+                    scope="row"
+                    class="border border-slate-gridline bg-slate-footFill px-2 py-2 text-left text-xs font-semibold text-slate-ink"
+                  >
+                    Total after
+                  </th>
+                  <td
+                    v-for="pid in game.playerIds"
+                    :key="`ta-${pid}`"
+                    class="border border-slate-gridline bg-slate-footFill px-2 py-2 text-center text-sm font-semibold tabular-nums text-slate-ink"
+                  >
+                    {{ projectedTotalThroughRound(modalRoundIndex, pid) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="flex flex-wrap justify-end gap-2 border-t border-slate-gridline/85 bg-slate-rail px-4 py-4"
+          >
+            <SlateButton
+              variant="default"
+              min-width="sm"
+              weight="medium"
+              @click="cancelScoreModal"
             >
-              <button
-                type="button"
-                class="inline-flex min-h-[44px] min-w-[7rem] items-center justify-center rounded-xl border border-slate-300/90 bg-white px-5 text-sm font-medium text-slate-800 shadow-sm transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 motion-safe:active:scale-[0.98]"
-                @click="cancelScoreModal"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                class="inline-flex min-h-[44px] min-w-[7rem] items-center justify-center rounded-xl bg-slate-accent px-5 text-sm font-semibold text-slate-ink shadow-soft transition-colors hover:bg-slate-accentDeep"
-                @click="closeScoreModal"
-              >
-                Done
-              </button>
-            </div>
+              Cancel
+            </SlateButton>
+            <SlateButton
+              variant="primary"
+              min-width="sm"
+              @click="closeScoreModal"
+            >
+              Done
+            </SlateButton>
           </div>
         </div>
+      </div>
     </Teleport>
   </div>
 </template>

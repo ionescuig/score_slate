@@ -27,15 +27,10 @@ function newGame() {
 <template>
   <div class="w-full py-10 md:py-14">
     <header
-      class="relative rounded-2xl border border-gray-200/90 bg-white p-6 shadow-soft sm:p-8"
+      class="relative rounded-2xl border border-slate-accent/30 bg-white p-6 shadow-soft sm:p-8"
     >
-      <p
-        class="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-inkMuted"
-      >
-        Local-first
-      </p>
       <h1
-        class="font-display mt-6 text-display text-slate-ink md:text-[2.75rem] md:leading-[1.08]"
+        class="font-display text-display text-slate-ink md:text-[2.75rem] md:leading-[1.08]"
       >
         Score Slate
       </h1>
@@ -48,11 +43,6 @@ function newGame() {
       >
         Local score sheets for Rummy, Mexican Train, and Whist — no accounts.
       </p>
-      <ClientOnly>
-        <p class="mt-2 text-sm text-slate-600">
-          Works offline after the first load.
-        </p>
-      </ClientOnly>
     </header>
 
     <div
@@ -62,20 +52,12 @@ function newGame() {
       "
       class="mt-10 flex flex-wrap gap-3"
     >
-      <button
-        type="button"
-        class="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-slate-accent px-5 text-sm font-semibold text-slate-ink shadow-soft transition-all duration-200 ease-out-expo hover:bg-slate-accentDeep motion-safe:hover:shadow-lift motion-safe:active:scale-[0.98]"
-        @click="continueGame"
-      >
+      <SlateButton variant="primary" @click="continueGame">
         Continue game
-      </button>
-      <button
-        type="button"
-        class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-slate-300/90 bg-white/80 px-5 text-sm font-medium text-slate-700 shadow-sm backdrop-blur-sm transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 motion-safe:active:scale-[0.98]"
-        @click="newGame"
-      >
+      </SlateButton>
+      <SlateButton variant="danger" @click="newGame">
         Discard session
-      </button>
+      </SlateButton>
     </div>
 
     <h2
@@ -87,7 +69,7 @@ function newGame() {
       <li class="md:min-w-0 md:flex-1">
         <button
           type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-gray-200/90 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
           @click="goSetup('rummy')"
         >
           <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('rummy') }}</span>
@@ -97,7 +79,7 @@ function newGame() {
       <li class="md:min-w-0 md:flex-1">
         <button
           type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-gray-200/90 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
           @click="goSetup('mexican-train')"
         >
           <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('mexican-train') }}</span>
@@ -107,7 +89,7 @@ function newGame() {
       <li class="md:min-w-0 md:flex-1">
         <button
           type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-gray-200/90 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-accent/10 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
           @click="goSetup('whist')"
         >
           <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('whist') }}</span>

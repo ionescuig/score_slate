@@ -18,8 +18,6 @@ export interface ScoreSheetPdfSnapshot {
   rummyHasRoundLimit?: boolean
 }
 
-export { rowLabelForScoreSheet, scoreCellDisplayString }
-
 /** Pure mapping from session snapshot → PDF options (shared with UI table labels). */
 export function buildScoreSlatePdfOptions(
   input: ScoreSheetPdfSnapshot,
