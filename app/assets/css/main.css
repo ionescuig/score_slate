@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Resume Optimiser palette — https://resumeoptimiser.snest.icu/ (see internal/resumeoptimiser-palette-reference.md) */
+  --ss-page: #f4f6f9;
+  --ss-bg: #ffffff;
+  --ss-ink: #0f2942;
+  --ss-ink-muted: #19436b;
+  --ss-accent: #00cfc8;
+  --ss-accent-deep: #00b8b0;
+  --ss-accent-bright: #02e6e0;
+  --ss-muted: #64748b;
+  /* Blue/cyan surfaces (Resume Optimiser palette — visible on white) */
+  --ss-mint: #ecfeff;
+  --ss-mint-soft: rgb(236 254 255 / 0.65);
+  --ss-frost: #dbeafe;
+  --ss-ice-wash: #eff6ff;
+  --ss-sky-tint: #e0f2fe;
+  --ss-ice: rgb(219 234 254 / 0.45);
+  /* Light scrim for modals — navy ink, not slate-900 */
+  --ss-scrim: rgb(15 41 66 / 0.22);
+}
+
+html {
+  background: var(--ss-page);
+  color: var(--ss-ink);
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+/* Keyboard / field-use: visible focus (industrial UI: high-contrast, calm ring) */
+@layer base {
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 2px;
+  }
+
+  input[type='text']:focus-visible,
+  input[type='number']:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 0;
+    border-color: var(--ss-accent-deep);
+  }
+
+  input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 2px;
+  }
+}

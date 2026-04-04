@@ -2,6 +2,10 @@
 
 Score Slate is a **local-first** Nuxt app: no login, no remote API for core gameplay. After the shell is loaded, scoring works offline; data stays in the browser (Pinia + `localStorage`).
 
+## Directory layout (Nuxt)
+
+Use the standard **`app/`** tree: `app/pages`, `app/layouts`, `app/components` (with **base → common → domain** subfolders per `docs/infrastructure/components.md`), `app/composables`, `app/stores`, and `assets/` for global CSS. Unit tests live under `tests/` and mirror domain/store modules as they grow. Keeps routes thin and logic discoverable without coupling pages to persistence details.
+
 ## Layered structure
 
 Roughly top to bottom:
