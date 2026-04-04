@@ -159,14 +159,6 @@ onMounted(() => {
             </SlateButton>
           </div>
         </div>
-        <div
-          v-if="game.limitReached && game.phase === 'playing'"
-          role="status"
-          aria-live="polite"
-          class="mt-6 rounded-xl border border-amber-200/70 bg-amber-50/95 px-4 py-3 text-sm leading-relaxed text-amber-950 shadow-soft"
-        >
-          A player reached the score limit — tap Finish when ready.
-        </div>
       </header>
 
       <GameScoreboard

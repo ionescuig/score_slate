@@ -22,7 +22,16 @@ const newPlayerNameInput = ref<HTMLInputElement | null>(null);
 /** When checked, use the round count below; when unchecked, play until Finish (no round cap). */
 const rummyLimitRoundCount = ref(false);
 const rummyRounds = ref(15);
-const rummyLimit = ref<string>("");
+/** Bound to `type="number"` — value may be string or number from v-model. */
+const rummyLimit = ref<string | number>("");
+
+function trimRummyLimitInput(): string {
+  const v = rummyLimit.value;
+  if (v === null || v === undefined) {
+    return "";
+  }
+  return String(v).trim();
+}
 
 const bounds = computed(() => {
   const g: GameType | null = gameType.value;
@@ -58,6 +67,31 @@ watch(rummyLimitRoundCount, (on: boolean) => {
   if (on && rummyRounds.value < 3) {
     rummyRounds.value = 3;
   }
+});
+
+/** Bottom copy for Rummy setup — updates from Limit rounds, round count, and score limit field. */
+const rummyLimitsSummary = computed(() => {
+  const limitedRounds = rummyLimitRoundCount.value;
+  let rounds = Number(rummyRounds.value);
+  if (!Number.isFinite(rounds) || rounds < 3) {
+    rounds = 3;
+  }
+  rounds = Math.min(99, Math.max(3, Math.floor(rounds)));
+
+  const limitRaw = trimRummyLimitInput();
+  const limitNum = limitRaw === "" ? NaN : Number(limitRaw);
+  const hasScoreLimit = Number.isFinite(limitNum) && limitNum > 0;
+
+  if (!limitedRounds && !hasScoreLimit) {
+    return "No round cap and no score limit — keep playing until you tap Finish on the score screen.";
+  }
+  if (!limitedRounds && hasScoreLimit) {
+    return `No round cap — the game ends automatically when someone reaches ${limitNum} points (after you save that round). You can still tap Finish anytime.`;
+  }
+  if (limitedRounds && !hasScoreLimit) {
+    return `${rounds} rounds — the game ends automatically when you save scores for the final round. You can tap Finish earlier if you want.`;
+  }
+  return `${rounds} rounds and a ${limitNum}-point cap — the game ends automatically when the last round is saved or when someone reaches ${limitNum} points after a round (whichever comes first).`;
 });
 
 /** Selection order matches game order. */
@@ -125,7 +159,7 @@ function start() {
       names[id] = p.name;
     }
   }
-  const limitRaw = rummyLimit.value.trim();
+  const limitRaw = trimRummyLimitInput();
   const limit =
     gameType.value === "rummy" && limitRaw !== "" ? Number(limitRaw) : null;
   const limitRounds = gameType.value === "rummy" && rummyLimitRoundCount.value;
@@ -375,9 +409,6 @@ const title = computed(
           <span>Limit rounds</span>
         </label>
       </div>
-      <p v-if="!rummyLimitRoundCount" class="text-xs text-slate-500">
-        No round cap — keep playing until you tap Finish on the score screen.
-      </p>
       <label class="block text-sm font-medium text-slate-700" for="rummy-limit">
         Optional score limit (stop when someone reaches it)
         <input
@@ -391,6 +422,13 @@ const title = computed(
           class="mt-1 w-full min-h-[44px] rounded-lg border border-slate-300 px-3 py-2 text-slate-900"
         />
       </label>
+      <p
+        class="text-xs text-slate-500"
+        role="status"
+        aria-live="polite"
+      >
+        {{ rummyLimitsSummary }}
+      </p>
     </div>
 
     <div class="mt-10 w-full">

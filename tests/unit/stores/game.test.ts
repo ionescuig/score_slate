@@ -140,4 +140,44 @@ describe('useGameStore', () => {
     g.finishGame()
     expect(g.phase).toBe('finished')
   })
+
+  it('rummy with round limit finishes phase when the final round is advanced', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 3,
+      rummyLimit: null,
+    })
+    for (let r = 0; r < 2; r += 1) {
+      g.setRoundScoreForRound(r, 'p1', 1)
+      g.setRoundScoreForRound(r, 'p2', 1)
+      g.advanceRound()
+      expect(g.phase).toBe('playing')
+    }
+    expect(g.currentRoundIndex).toBe(2)
+    g.setRoundScoreForRound(2, 'p1', 1)
+    g.setRoundScoreForRound(2, 'p2', 1)
+    g.advanceRound()
+    expect(g.phase).toBe('finished')
+    expect(g.currentRoundIndex).toBe(2)
+  })
+
+  it('rummy score limit is detected after round scores are flushed', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: 100,
+    })
+    g.setRoundScoreForRound(0, 'p1', 100)
+    g.setRoundScoreForRound(0, 'p2', 0)
+    g.flushRoundScores(0)
+    expect(g.limitReached).toBe(true)
+    g.finishGame()
+    expect(g.phase).toBe('finished')
+  })
 })

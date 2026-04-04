@@ -294,6 +294,14 @@ export const useGameStore = defineStore('game', {
       }
       if (
         this.gameType === 'rummy' &&
+        this.rummyHasRoundLimit &&
+        this.currentRoundIndex === this.roundCount - 1
+      ) {
+        this.phase = 'finished'
+        return
+      }
+      if (
+        this.gameType === 'rummy' &&
         !this.rummyHasRoundLimit &&
         this.currentRoundIndex === this.roundCount - 1
       ) {

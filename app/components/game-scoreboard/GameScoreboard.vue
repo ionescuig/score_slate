@@ -80,7 +80,7 @@ function modalCell(playerId: string): string {
 
 /** One mode per row — avoids recomputing per cell in the template. */
 const rowCellModes = computed(() =>
-  game.rowLabels.map((_: string, ri: number) => {
+  game.rowLabels.map((_: number, ri: number) => {
     if (ri > game.currentRoundIndex) {
       return "future" as const;
     }
@@ -122,6 +122,30 @@ function isDealerColumn(pid: string): boolean {
     return false;
   }
   return game.dealerPlayerId === pid;
+}
+
+/** Grid border for player columns (unchanged across roles). */
+function playerColumnBorderClass(): string {
+  return "border border-slate-gridline";
+}
+
+/**
+ * Main score grid body only — leader/dealer tints are not applied to column
+ * headers or total row (or modal header / total rows).
+ */
+function playerColumnBodyBgClass(pid: string): string {
+  if (isLeaderColumn(pid)) {
+    return "bg-emerald-50";
+  }
+  if (isDealerColumn(pid)) {
+    return "bg-slate-100";
+  }
+  return "bg-white";
+}
+
+/** Round row where scores are entered next (playing only). */
+function isActiveScoringRow(ri: number): boolean {
+  return game.phase === "playing" && ri === game.currentRoundIndex;
 }
 
 function whistSectionTopBorder(ri: number): string {
@@ -215,7 +239,9 @@ function closeScoreModal() {
   modalRoundSnapshot.value = null;
   if (ri !== null) {
     game.flushRoundScores(ri);
-    if (
+    if (game.phase === "playing" && game.limitReached) {
+      game.finishGame();
+    } else if (
       game.phase === "playing" &&
       ri === game.currentRoundIndex &&
       game.canAdvanceRound
@@ -280,14 +306,10 @@ watch(modalRoundIndex, (ri: number | null) => {
               v-for="pid in game.playerIds"
               :key="pid"
               scope="col"
-              class="min-w-0 border px-2 py-2 text-center text-xs font-semibold"
-              :class="
-                isLeaderColumn(pid)
-                  ? 'border-slate-accent/80 bg-slate-accent/8 text-slate-ink ring-1 ring-slate-accent/70'
-                  : isDealerColumn(pid)
-                    ? 'border-slate-gridline/90 bg-slate-dealerFill text-slate-ink'
-                    : 'border-slate-gridline bg-slate-headFill text-slate-ink'
-              "
+              :class="[
+                playerColumnBorderClass(),
+                'min-w-0 bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink',
+              ]"
             >
               <span class="block font-semibold">{{
                 game.playerNames[pid]
@@ -309,10 +331,7 @@ watch(modalRoundIndex, (ri: number | null) => {
           <tr
             v-for="ri in tableRoundIndices"
             :key="ri"
-            :class="[
-              ri === game.currentRoundIndex ? 'bg-slate-accent/10' : '',
-              rowClickable(ri) ? 'cursor-pointer hover:bg-slate-accent/5' : '',
-            ]"
+            :class="[rowClickable(ri) ? 'cursor-pointer' : '']"
             :tabindex="rowClickable(ri) ? 0 : -1"
             :aria-label="rowAriaLabel(ri)"
             @click="onRowClick(ri)"
@@ -321,21 +340,26 @@ watch(modalRoundIndex, (ri: number | null) => {
           >
             <th
               scope="row"
-              class="border border-slate-gridline bg-slate-headFill px-1.5 py-1.5 text-center text-xs font-semibold tabular-nums leading-tight text-slate-800"
-              :class="whistSectionTopBorder(ri)"
+              :class="[
+                'border border-slate-gridline px-1.5 text-center text-xs font-semibold tabular-nums leading-tight text-slate-800',
+                isActiveScoringRow(ri)
+                  ? 'border-l-[3px] border-l-slate-accent bg-slate-mint py-2 text-slate-ink shadow-[inset_0_0_0_1px_rgb(0_207_200_/_0.2)]'
+                  : 'bg-slate-headFill py-1.5',
+                whistSectionTopBorder(ri),
+              ]"
             >
               {{ rowLabelForIndex(ri) }}
             </th>
             <td
               v-for="pid in game.playerIds"
               :key="`${ri}-${pid}`"
-              class="min-w-0 border px-1 py-1 text-center text-sm"
               :class="[
-                isLeaderColumn(pid)
-                  ? 'border-slate-accent/35 bg-slate-accent/[0.06] text-slate-800'
-                  : isDealerColumn(pid)
-                    ? 'border-slate-gridline/85 bg-slate-dealerFill/90 text-slate-800'
-                    : 'border-slate-gridline bg-white text-slate-800',
+                playerColumnBorderClass(),
+                'min-w-0 px-1 text-center text-sm text-slate-800',
+                isActiveScoringRow(ri)
+                  ? 'py-2 shadow-[inset_0_0_0_2px_rgb(0_207_200_/_0.35)]'
+                  : 'py-1',
+                playerColumnBodyBgClass(pid),
                 whistSectionTopBorder(ri),
               ]"
             >
@@ -365,7 +389,10 @@ watch(modalRoundIndex, (ri: number | null) => {
             <td
               v-for="pid in game.playerIds"
               :key="`t-${pid}`"
-              class="min-w-0 border border-slate-gridline bg-slate-footFill px-2 py-2 text-center text-sm font-semibold text-slate-ink"
+              :class="[
+                playerColumnBorderClass(),
+                'min-w-0 bg-slate-footFill px-2 py-2 text-center text-sm font-semibold text-slate-ink',
+              ]"
             >
               {{ game.runningTotals[pid] ?? 0 }}
             </td>
@@ -429,7 +456,10 @@ watch(modalRoundIndex, (ri: number | null) => {
                     v-for="pid in game.playerIds"
                     :key="`mh-${pid}`"
                     scope="col"
-                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink"
+                    :class="[
+                      playerColumnBorderClass(),
+                      'bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink',
+                    ]"
                   >
                     {{ game.playerNames[pid] }}
                   </th>
@@ -446,7 +476,10 @@ watch(modalRoundIndex, (ri: number | null) => {
                   <td
                     v-for="pid in game.playerIds"
                     :key="`tb-${pid}`"
-                    class="border border-slate-gridline bg-white px-2 py-2 text-center tabular-nums text-slate-800"
+                    :class="[
+                      playerColumnBorderClass(),
+                      'bg-white px-2 py-2 text-center tabular-nums text-slate-800',
+                    ]"
                   >
                     {{ totalBeforeRound(modalRoundIndex, pid) }}
                   </td>
@@ -492,7 +525,10 @@ watch(modalRoundIndex, (ri: number | null) => {
                   <td
                     v-for="pid in game.playerIds"
                     :key="`ta-${pid}`"
-                    class="border border-slate-gridline bg-slate-footFill px-2 py-2 text-center text-sm font-semibold tabular-nums text-slate-ink"
+                    :class="[
+                      playerColumnBorderClass(),
+                      'bg-slate-footFill px-2 py-2 text-center text-sm font-semibold tabular-nums text-slate-ink',
+                    ]"
                   >
                     {{ projectedTotalThroughRound(modalRoundIndex, pid) }}
                   </td>
@@ -504,9 +540,8 @@ watch(modalRoundIndex, (ri: number | null) => {
             class="flex flex-wrap justify-end gap-2 border-t border-slate-gridline/85 bg-slate-rail px-4 py-4"
           >
             <SlateButton
-              variant="default"
+              variant="danger"
               min-width="sm"
-              weight="medium"
               @click="cancelScoreModal"
             >
               Cancel

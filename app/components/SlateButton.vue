@@ -154,7 +154,7 @@ const rootClass = computed(() => {
     primary: [
       'border border-slate-accent/90',
       primaryRestBg,
-      'text-slate-ink shadow-sm hover:border-slate-accent hover:bg-ro-primary hover:text-white motion-safe:hover:shadow-lift disabled:hover:border-slate-accent/90',
+      'text-slate-ink shadow-sm hover:border-slate-accent hover:bg-ro-primary hover:text-slate-ink motion-safe:hover:shadow-lift disabled:hover:border-slate-accent/90',
       primaryDisabledRestBg,
       'disabled:hover:text-slate-ink',
     ].join(' '),
