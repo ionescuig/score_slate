@@ -4,8 +4,20 @@ import {
   scoreCellDisplayString,
 } from "~/utils/game/score-display";
 import { whistRowStartsSection } from "~/utils/game/whist";
+import { visibleRoundIndices } from "~/utils/game/round-visibility";
 
 const game = useGameStore();
+
+const tableRoundIndices = computed(() =>
+  visibleRoundIndices({
+    gameType: game.gameType,
+    phase: game.phase,
+    rummyHasRoundLimit: game.rummyHasRoundLimit,
+    rowLabelsLength: game.rowLabels.length,
+    scores: game.scores,
+    playerIds: game.playerIds,
+  }),
+);
 
 function rowLabelForIndex(i: number): string {
   if (!game.gameType) {
@@ -106,6 +118,9 @@ function isLeaderColumn(pid: string): boolean {
 }
 
 function isDealerColumn(pid: string): boolean {
+  if (game.phase === "finished") {
+    return false;
+  }
   return game.dealerPlayerId === pid;
 }
 
@@ -279,7 +294,7 @@ watch(modalRoundIndex, (ri: number | null) => {
                 game.playerNames[pid]
               }}</span>
               <span
-                v-if="game.dealerPlayerId === pid"
+                v-if="isDealerColumn(pid)"
                 class="mt-1 block text-[10px] font-normal uppercase tracking-wide text-slate-500"
                 >Dealer</span
               >
@@ -293,7 +308,7 @@ watch(modalRoundIndex, (ri: number | null) => {
         </thead>
         <tbody>
           <tr
-            v-for="(_, ri) in game.rowLabels"
+            v-for="ri in tableRoundIndices"
             :key="ri"
             :class="[
               ri === game.currentRoundIndex ? 'bg-slate-accent/10' : '',

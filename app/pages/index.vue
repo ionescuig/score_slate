@@ -4,6 +4,13 @@ import type { GameType } from '~/utils/game/game-types'
 
 const game = useGameStore()
 
+/** After mount only — Pinia + localStorage restore phase before first client paint, so SSR is idle but client can be playing (hydration mismatch without this). */
+const homeMounted = ref(false)
+
+onMounted(() => {
+  homeMounted.value = true
+})
+
 function goSetup(g: GameType) {
   navigateTo(`/setup/${g}`)
 }
@@ -49,7 +56,10 @@ function newGame() {
     </header>
 
     <div
-      v-if="game.phase === 'playing' || game.phase === 'finished'"
+      v-if="
+        homeMounted &&
+        (game.phase === 'playing' || game.phase === 'finished')
+      "
       class="mt-10 flex flex-wrap gap-3"
     >
       <button

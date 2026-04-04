@@ -42,4 +42,20 @@ describe('buildScoreSlatePdfOptions', () => {
     })
     expect(opts.rows[0]!.cells).toEqual([''])
   })
+
+  it('omits unstarted rummy unlimited rounds when finished', () => {
+    const opts = buildScoreSlatePdfOptions({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rowLabels: [1, 2],
+      scores: { 0: { p1: 23, p2: 43 } },
+      runningTotals: { p1: 23, p2: 43 },
+      phase: 'finished',
+      rummyHasRoundLimit: false,
+    })
+    expect(opts.rows).toHaveLength(1)
+    expect(opts.rows[0]!.label).toBe('Round 1')
+    expect(opts.rows[0]!.cells).toEqual(['23', '43'])
+  })
 })

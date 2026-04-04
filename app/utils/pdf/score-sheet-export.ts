@@ -3,6 +3,7 @@ import {
   rowLabelForScoreSheet,
   scoreCellDisplayString,
 } from '~/utils/game/score-display'
+import { visibleRoundIndices } from '~/utils/game/round-visibility'
 import type { BuildScoreSlatePdfOptions } from '~/utils/pdf/score-slate-pdf'
 
 export interface ScoreSheetPdfSnapshot {
@@ -12,6 +13,9 @@ export interface ScoreSheetPdfSnapshot {
   rowLabels: number[]
   scores: Record<number, Record<string, number>>
   runningTotals: Record<string, number>
+  /** When set with phase + rummy unlimited, unplayed trailing rounds are omitted from rows. */
+  phase?: 'idle' | 'playing' | 'finished'
+  rummyHasRoundLimit?: boolean
 }
 
 export { rowLabelForScoreSheet, scoreCellDisplayString }
@@ -21,7 +25,15 @@ export function buildScoreSlatePdfOptions(
   input: ScoreSheetPdfSnapshot,
 ): BuildScoreSlatePdfOptions {
   const names = input.playerIds.map((id) => input.playerNames[id] ?? id)
-  const rows = input.rowLabels.map((_, ri) => ({
+  const roundIndices = visibleRoundIndices({
+    gameType: input.gameType,
+    phase: input.phase ?? 'playing',
+    rummyHasRoundLimit: input.rummyHasRoundLimit ?? true,
+    rowLabelsLength: input.rowLabels.length,
+    scores: input.scores,
+    playerIds: input.playerIds,
+  })
+  const rows = roundIndices.map((ri) => ({
     label: rowLabelForScoreSheet(input.gameType, input.rowLabels, ri),
     cells: input.playerIds.map((pid) =>
       scoreCellDisplayString(input.scores, ri, pid),

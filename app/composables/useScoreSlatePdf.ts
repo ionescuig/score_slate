@@ -16,6 +16,8 @@ export function useScoreSlatePdf() {
         rowLabels: game.rowLabels,
         scores: game.scores,
         runningTotals: game.runningTotals,
+        phase: game.phase,
+        rummyHasRoundLimit: game.rummyHasRoundLimit,
       }),
     )
   }
