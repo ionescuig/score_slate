@@ -199,26 +199,22 @@ const title = computed(
             Tap a name on the right to add them here.
           </template>
         </p>
-        <ul v-else class="mt-3 space-y-2">
+        <ul v-else class="mt-3 space-y-3">
           <li
             v-for="p in activePlayers"
             :key="p.id"
-            class="flex min-h-[44px] gap-2"
+            class="flex min-h-[44px] items-stretch gap-2"
           >
-            <SlateButton
-              variant="primary"
-              primary-fill="soft"
-              grow
-              justify="start"
-              density="list"
+            <SlateChoiceTile
+              class="min-w-0 flex-1"
+              :title="p.name"
               :aria-label="`Remove ${p.name} from this game`"
               @click="togglePlayer(p.id)"
-            >
-              {{ p.name }}
-            </SlateButton>
+            />
             <SlateButton
               variant="danger"
               size="icon"
+              class="self-center shrink-0"
               :aria-label="`Remove ${p.name} from saved names`"
               :title="`Remove ${p.name} from saved names`"
               @click="removeFromSaved(p.id)"
@@ -248,19 +244,15 @@ const title = computed(
         >
           Everyone is in this game.
         </p>
-        <ul v-else-if="poolPlayers.length > 0" class="mt-3 space-y-2">
+        <ul v-else-if="poolPlayers.length > 0" class="mt-3 space-y-3">
           <li
             v-for="p in poolPlayers"
             :key="p.id"
-            class="flex min-h-[44px] gap-2"
+            class="flex min-h-[44px] items-stretch gap-2"
           >
-            <SlateButton
-              variant="default"
-              grow
-              justify="start"
-              density="list"
-              weight="medium"
-              label-tone="body"
+            <SlateChoiceTile
+              class="min-w-0 flex-1"
+              :title="p.name"
               :disabled="selectedIds.length >= bounds.max"
               :aria-label="
                 selectedIds.length >= bounds.max
@@ -268,12 +260,11 @@ const title = computed(
                   : `Add ${p.name} to this game`
               "
               @click="togglePlayer(p.id)"
-            >
-              {{ p.name }}
-            </SlateButton>
+            />
             <SlateButton
               variant="danger"
               size="icon"
+              class="self-center shrink-0"
               :aria-label="`Remove ${p.name} from saved names`"
               :title="`Remove ${p.name} from saved names`"
               @click="removeFromSaved(p.id)"

@@ -67,34 +67,28 @@ function newGame() {
     </h2>
     <ul class="mt-6 flex flex-col gap-3 md:flex-row md:items-stretch md:gap-4">
       <li class="md:min-w-0 md:flex-1">
-        <button
-          type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+        <SlateChoiceTile
+          :title="displayTitleForGameType('rummy')"
+          subtitle="2–6 players · highest score wins"
+          class="h-full"
           @click="goSetup('rummy')"
-        >
-          <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('rummy') }}</span>
-          <span class="mt-1 block text-sm text-slate-inkMuted">2–6 players · highest score wins</span>
-        </button>
+        />
       </li>
       <li class="md:min-w-0 md:flex-1">
-        <button
-          type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+        <SlateChoiceTile
+          :title="displayTitleForGameType('mexican-train')"
+          subtitle="2–8 players · pip ladder 12→0"
+          class="h-full"
           @click="goSetup('mexican-train')"
-        >
-          <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('mexican-train') }}</span>
-          <span class="mt-1 block text-sm text-slate-inkMuted">2–8 players · pip ladder 12→0</span>
-        </button>
+        />
       </li>
       <li class="md:min-w-0 md:flex-1">
-        <button
-          type="button"
-          class="group h-full w-full min-h-[44px] rounded-2xl border border-slate-accent/25 bg-white p-4 text-left shadow-soft transition-all duration-200 ease-out-expo hover:border-slate-accent hover:bg-slate-mint/50 hover:shadow-lift motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0"
+        <SlateChoiceTile
+          :title="displayTitleForGameType('whist')"
+          subtitle="4–6 players · cards-per-deal rows"
+          class="h-full"
           @click="goSetup('whist')"
-        >
-          <span class="font-semibold text-slate-ink">{{ displayTitleForGameType('whist') }}</span>
-          <span class="mt-1 block text-sm text-slate-inkMuted">4–6 players · cards-per-deal rows</span>
-        </button>
+        />
       </li>
     </ul>
   </div>
