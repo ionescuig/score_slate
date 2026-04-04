@@ -1,0 +1,3 @@
+# Default: allow crawlers. The /play route also sends noindex via meta (session UI).
+User-agent: *
+Allow: /

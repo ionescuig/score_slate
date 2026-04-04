@@ -58,6 +58,25 @@ onMounted(() => {
   }
 });
 
+const setupSeoTitle = computed(() =>
+  gameType.value
+    ? `Setup · ${displayTitleForGameType(gameType.value)}`
+    : "Setup",
+);
+
+const setupSeoDescription = computed(() =>
+  gameType.value
+    ? `Choose players and start ${displayTitleForGameType(gameType.value)}. Scores stay on this device — no account.`
+    : "Choose players and game options on Score Slate.",
+);
+
+useSeoMeta({
+  title: () => setupSeoTitle.value,
+  description: () => setupSeoDescription.value,
+  ogTitle: () => setupSeoTitle.value,
+  ogDescription: () => setupSeoDescription.value,
+});
+
 /** Selection order matches game order. */
 const activePlayers = computed(() => {
   const list: PlayerEntry[] = [];

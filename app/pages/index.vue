@@ -22,6 +22,15 @@ function continueGame() {
 function newGame() {
   game.resetSession()
 }
+
+useSeoMeta({
+  title: 'Local tabletop scorekeeping',
+  description:
+    'Pick Rummy, Mexican Train, or Whist — track scores in the browser with no account. Data stays on your device and works offline after the first load.',
+  ogTitle: 'Score Slate — local tabletop scorekeeping',
+  ogDescription:
+    'Pick Rummy, Mexican Train, or Whist — track scores in the browser with no account. Data stays on your device.',
+})
 </script>
 
 <template>

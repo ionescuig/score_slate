@@ -1,3 +1,7 @@
+<script setup lang="ts">
+useScoreSlateRouteSeo();
+</script>
+
 <template>
   <div class="relative min-h-[100dvh] min-h-screen">
     <a

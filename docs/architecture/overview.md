@@ -37,4 +37,5 @@ User action → Component → Composable / Store action → Pure domain helpers 
 
 - `internal/Score Slate PDR.md` — product scope.
 - `docs/infrastructure/state-and-persistence.md` — Pinia + storage details.
+- `docs/infrastructure/seo.md` — titles, Open Graph, env-based canonical URLs.
 - `.cursor/rules/state-and-persistence.mdc` — agent-oriented summary.

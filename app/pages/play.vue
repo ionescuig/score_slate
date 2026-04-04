@@ -6,6 +6,13 @@ definePageMeta({
   ssr: false,
 });
 
+useSeoMeta({
+  title: "Session",
+  description:
+    "Active Score Slate game session. Open the app from the home page to start scoring.",
+  robots: "noindex, nofollow",
+});
+
 const {
   game,
   canLockOrientation,

@@ -19,6 +19,7 @@ Reusable conventions: components, state, tests.
 - **[components.md](./infrastructure/components.md)** — component layering (base / common / domain).
 - **[state-and-persistence.md](./infrastructure/state-and-persistence.md)** — Pinia, `localStorage`, SSR guards.
 - **[testing.md](./infrastructure/testing.md)** — test layout and priorities.
+- **[seo.md](./infrastructure/seo.md)** — meta tags, env vars for deploy, OG/Twitter, backlog.
 
 ## Contributing
 

@@ -1,6 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  runtimeConfig: {
+    public: {
+      /** Production origin, no trailing slash (e.g. https://scoreslate.example.com). Enables canonical + og:url. */
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? '',
+      /** Absolute URL to default Open Graph image (e.g. 1200×630). Optional until you host one. */
+      ogImageUrl: process.env.NUXT_PUBLIC_OG_IMAGE_URL ?? '',
+    },
+  },
   routeRules: {
     '/play': { ssr: false },
   },
@@ -18,7 +26,25 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      title: 'Score Slate',
+      htmlAttrs: {
+        lang: 'en',
+      },
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Local-first scorekeeping for tabletop games in your browser — no account, works offline after load.',
+        },
+        { name: 'theme-color', content: '#00cfc8' },
+        { name: 'apple-mobile-web-app-title', content: 'Score Slate' },
+      ],
       link: [
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/favicon.svg',
+        },
         { rel: 'manifest', href: '/manifest.webmanifest' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         {
