@@ -55,7 +55,7 @@ Assume the executor has little context; the plan file is the source of truth. Sa
 - **Steps:** Numbered steps with exact commands and expected output (e.g. `npm run test -- path/to/test` → Expected: **FAIL** with "…"; then after impl → Expected: **PASS**).
 - **Verification:** Confirm RED then GREEN (or the listed sub-steps) before marking the task done.
 
-Reference `internal/` and existing docs where relevant. Describe changes; no full code. DRY, YAGNI. The user commits; no automated commits.
+Reference `internal/` and existing docs where relevant. Describe changes; no full code. DRY, YAGNI. The user commits; no automated commits (same rule as **Git and destructive operations** in `.cursor/rules/core.mdc`).
 
 **Commands:** Use the project's real `package.json` scripts once they exist.
 
