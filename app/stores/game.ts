@@ -316,5 +316,25 @@ export const useGameStore = defineStore('game', {
         this.phase = 'finished'
       }
     },
+    /**
+     * After the score modal saves: flush the round, then auto-finish on score cap
+     * or advance when the committed round is the current one and complete.
+     */
+    onScoreModalCommitted(roundIndex: number) {
+      if (this.phase !== 'playing') {
+        return
+      }
+      this.flushRoundScores(roundIndex)
+      if (this.limitReached) {
+        this.finishGame()
+        return
+      }
+      if (
+        roundIndex === this.currentRoundIndex &&
+        this.canAdvanceRound
+      ) {
+        this.advanceRound()
+      }
+    },
   },
 })

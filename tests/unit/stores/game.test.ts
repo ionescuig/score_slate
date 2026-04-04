@@ -180,4 +180,55 @@ describe('useGameStore', () => {
     g.finishGame()
     expect(g.phase).toBe('finished')
   })
+
+  it('onScoreModalCommitted finishes when score limit is met after flush', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: 100,
+    })
+    g.setRoundScoreForRound(0, 'p1', 100)
+    g.setRoundScoreForRound(0, 'p2', 0)
+    g.onScoreModalCommitted(0)
+    expect(g.phase).toBe('finished')
+  })
+
+  it('onScoreModalCommitted advances when current round is complete', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    g.setRoundScoreForRound(0, 'p1', 1)
+    g.setRoundScoreForRound(0, 'p2', 1)
+    g.onScoreModalCommitted(0)
+    expect(g.phase).toBe('playing')
+    expect(g.currentRoundIndex).toBe(1)
+  })
+
+  it('onScoreModalCommitted does not advance when committing a past round', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    g.setRoundScoreForRound(0, 'p1', 1)
+    g.setRoundScoreForRound(0, 'p2', 1)
+    g.advanceRound()
+    g.setRoundScoreForRound(1, 'p1', 1)
+    g.setRoundScoreForRound(1, 'p2', 1)
+    g.setRoundScoreForRound(0, 'p1', 3)
+    g.onScoreModalCommitted(0)
+    expect(g.phase).toBe('playing')
+    expect(g.currentRoundIndex).toBe(1)
+  })
 })

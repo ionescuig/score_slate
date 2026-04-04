@@ -19,19 +19,14 @@ const gameType = computed<GameType | null>(() =>
 const selectedIds = ref<string[]>([]);
 const newName = ref("");
 const newPlayerNameInput = ref<HTMLInputElement | null>(null);
-/** When checked, use the round count below; when unchecked, play until Finish (no round cap). */
-const rummyLimitRoundCount = ref(false);
-const rummyRounds = ref(15);
-/** Bound to `type="number"` — value may be string or number from v-model. */
-const rummyLimit = ref<string | number>("");
 
-function trimRummyLimitInput(): string {
-  const v = rummyLimit.value;
-  if (v === null || v === undefined) {
-    return "";
-  }
-  return String(v).trim();
-}
+const {
+  rummyLimitRoundCount,
+  rummyRounds,
+  rummyLimit,
+  rummyLimitsSummary,
+  rummyStartPayload,
+} = useRummySetup();
 
 const bounds = computed(() => {
   const g: GameType | null = gameType.value;
@@ -61,37 +56,6 @@ onMounted(() => {
   if (!gameType.value) {
     navigateTo("/");
   }
-});
-
-watch(rummyLimitRoundCount, (on: boolean) => {
-  if (on && rummyRounds.value < 3) {
-    rummyRounds.value = 3;
-  }
-});
-
-/** Bottom copy for Rummy setup — updates from Limit rounds, round count, and score limit field. */
-const rummyLimitsSummary = computed(() => {
-  const limitedRounds = rummyLimitRoundCount.value;
-  let rounds = Number(rummyRounds.value);
-  if (!Number.isFinite(rounds) || rounds < 3) {
-    rounds = 3;
-  }
-  rounds = Math.min(99, Math.max(3, Math.floor(rounds)));
-
-  const limitRaw = trimRummyLimitInput();
-  const limitNum = limitRaw === "" ? NaN : Number(limitRaw);
-  const hasScoreLimit = Number.isFinite(limitNum) && limitNum > 0;
-
-  if (!limitedRounds && !hasScoreLimit) {
-    return "No round cap and no score limit — keep playing until you tap Finish on the score screen.";
-  }
-  if (!limitedRounds && hasScoreLimit) {
-    return `No round cap — the game ends automatically when someone reaches ${limitNum} points (after you save that round). You can still tap Finish anytime.`;
-  }
-  if (limitedRounds && !hasScoreLimit) {
-    return `${rounds} rounds — the game ends automatically when you save scores for the final round. You can tap Finish earlier if you want.`;
-  }
-  return `${rounds} rounds and a ${limitNum}-point cap — the game ends automatically when the last round is saved or when someone reaches ${limitNum} points after a round (whichever comes first).`;
 });
 
 /** Selection order matches game order. */
@@ -159,33 +123,16 @@ function start() {
       names[id] = p.name;
     }
   }
-  const limitRaw = trimRummyLimitInput();
-  const limit =
-    gameType.value === "rummy" && limitRaw !== "" ? Number(limitRaw) : null;
-  const limitRounds = gameType.value === "rummy" && rummyLimitRoundCount.value;
-  const effectiveRummyRounds =
-    gameType.value === "rummy" && limitRounds
-      ? Math.max(
-          3,
-          Math.min(
-            99,
-            Number.isFinite(Number(rummyRounds.value))
-              ? Number(rummyRounds.value)
-              : 15,
-          ),
-        )
-      : undefined;
+  const rummy = gameType.value === "rummy" ? rummyStartPayload() : null;
   gameStore.startGame({
     gameType: gameType.value,
     playerIds: [...selectedIds.value],
     playerNames: names,
     rummyHasRoundLimit:
-      gameType.value === "rummy" ? rummyLimitRoundCount.value : undefined,
-    rummyRounds: effectiveRummyRounds,
-    rummyLimit:
-      gameType.value === "rummy" && limitRaw !== "" && !Number.isNaN(limit!)
-        ? limit
-        : null,
+      gameType.value === "rummy" ? rummy!.rummyHasRoundLimit : undefined,
+    rummyRounds:
+      gameType.value === "rummy" ? rummy!.rummyRounds : undefined,
+    rummyLimit: gameType.value === "rummy" ? rummy!.rummyLimit : null,
   });
   navigateTo("/play");
 }
@@ -356,7 +303,7 @@ const title = computed(
             enterkeyhint="done"
             class="min-h-[44px] min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-slate-900"
             @keydown.enter.prevent="addNew"
-          />
+          >
           <SlateButton
             variant="default"
             layout-width="fill-sm-hug"
@@ -396,7 +343,7 @@ const title = computed(
             autocomplete="off"
             :disabled="!rummyLimitRoundCount"
             class="min-h-[44px] min-w-[5rem] flex-1 rounded-lg border border-slate-300 px-3 py-2 text-center tabular-nums text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 sm:flex-initial"
-          />
+          >
         </label>
         <label
           class="inline-flex cursor-pointer select-none items-center gap-2 text-sm text-slate-700"
@@ -405,7 +352,7 @@ const title = computed(
             v-model="rummyLimitRoundCount"
             type="checkbox"
             class="size-4 shrink-0 accent-slate-accent"
-          />
+          >
           <span>Limit rounds</span>
         </label>
       </div>
@@ -420,7 +367,7 @@ const title = computed(
           autocomplete="off"
           inputmode="numeric"
           class="mt-1 w-full min-h-[44px] rounded-lg border border-slate-300 px-3 py-2 text-slate-900"
-        />
+        >
       </label>
       <p
         class="text-xs text-slate-500"

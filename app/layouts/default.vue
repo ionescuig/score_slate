@@ -11,7 +11,7 @@
       class="min-h-[100dvh] min-h-screen bg-slate-page px-4 py-4 text-slate-ink md:px-5 md:py-6"
       tabindex="-1"
     >
-      <div class="mx-auto w-full lg:w-2/3">
+      <div class="mx-auto w-full xl:w-2/3">
         <slot />
       </div>
     </main>

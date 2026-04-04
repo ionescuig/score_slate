@@ -67,7 +67,7 @@ onMounted(() => {
       </div>
       <header
         class="mb-6 rounded-2xl border border-slate-accent/30 bg-white p-5 shadow-soft md:p-6"
-        aria-label="Game header"
+        aria-labelledby="play-game-title"
       >
         <div
           class="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-stretch"
@@ -82,6 +82,7 @@ onMounted(() => {
               </NuxtLink>
             </nav>
             <h1
+              id="play-game-title"
               class="font-display mt-4 text-[1.625rem] font-semibold leading-[1.12] tracking-tight text-slate-ink md:text-[2rem]"
             >
               {{ title }}

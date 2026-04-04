@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {
-  rowLabelForScoreSheet,
-  scoreCellDisplayString,
-} from "~/utils/game/score-display";
-import { whistRowStartsSection } from "~/utils/game/whist";
+import GameScoreGrid from "~/components/game-scoreboard/GameScoreGrid.vue";
+import GameScoreboardHints from "~/components/game-scoreboard/GameScoreboardHints.vue";
+import GameScoreRoundModal from "~/components/game-scoreboard/GameScoreRoundModal.vue";
+import { rowLabelForScoreSheet } from "~/utils/game/score-display";
+import type { ScoreboardGridModel } from "~/utils/game/scoreboard-grid-model";
 import { visibleRoundIndices } from "~/utils/game/round-visibility";
 
 const game = useGameStore();
@@ -26,58 +26,6 @@ function rowLabelForIndex(i: number): string {
   return rowLabelForScoreSheet(game.gameType, game.rowLabels, i);
 }
 
-function cellValue(roundIdx: number, playerId: string): string {
-  return scoreCellDisplayString(game.scores, roundIdx, playerId);
-}
-
-function currentCell(playerId: string): string {
-  return cellValue(game.currentRoundIndex, playerId);
-}
-
-function totalBeforeRound(roundIdx: number, playerId: string): number {
-  let t = 0;
-  for (let r = 0; r < roundIdx; r += 1) {
-    t += game.scores[r]?.[playerId] ?? 0;
-  }
-  return t;
-}
-
-/** Running total through roundIdx inclusive (for modal “total after”). */
-function projectedTotalThroughRound(
-  roundIdx: number,
-  playerId: string,
-): number {
-  let t = 0;
-  for (let r = 0; r <= roundIdx; r += 1) {
-    t += game.scores[r]?.[playerId] ?? 0;
-  }
-  return t;
-}
-
-function updateScore(playerId: string, raw: string) {
-  const ri = modalRoundIndex.value;
-  if (ri === null) {
-    return;
-  }
-  if (raw === "" || raw === "-") {
-    game.setRoundScoreForRound(ri, playerId, 0);
-    return;
-  }
-  const n = Number(raw);
-  if (Number.isNaN(n)) {
-    return;
-  }
-  game.setRoundScoreForRound(ri, playerId, n);
-}
-
-function modalCell(playerId: string): string {
-  const ri = modalRoundIndex.value;
-  if (ri === null) {
-    return "";
-  }
-  return cellValue(ri, playerId);
-}
-
 /** One mode per row — avoids recomputing per cell in the template. */
 const rowCellModes = computed(() =>
   game.rowLabels.map((_: number, ri: number) => {
@@ -94,68 +42,22 @@ const rowCellModes = computed(() =>
   }),
 );
 
+const gridModel = computed<ScoreboardGridModel>(() => ({
+  gameType: game.gameType,
+  phase: game.phase as "playing" | "finished",
+  playerIds: game.playerIds,
+  playerNames: game.playerNames,
+  rowLabels: game.rowLabels,
+  scores: game.scores,
+  runningTotals: game.runningTotals,
+  currentRoundIndex: game.currentRoundIndex,
+  tableRoundIndices: tableRoundIndices.value,
+  rowCellModes: rowCellModes.value,
+  scoreboardLeaderPlayerIds: game.scoreboardLeaderPlayerIds,
+  dealerPlayerId: game.dealerPlayerId,
+}));
+
 const modalRoundIndex = ref<number | null>(null);
-
-function rowClickable(ri: number): boolean {
-  if (game.phase === "playing") {
-    return ri <= game.currentRoundIndex;
-  }
-  if (game.phase === "finished") {
-    return true;
-  }
-  return false;
-}
-
-function rowAriaLabel(ri: number): string | undefined {
-  if (!rowClickable(ri)) {
-    return undefined;
-  }
-  return `Open scores for ${rowLabelForIndex(ri)}`;
-}
-
-function isLeaderColumn(pid: string): boolean {
-  return game.scoreboardLeaderPlayerIds.includes(pid);
-}
-
-function isDealerColumn(pid: string): boolean {
-  if (game.phase === "finished") {
-    return false;
-  }
-  return game.dealerPlayerId === pid;
-}
-
-/** Grid border for player columns (unchanged across roles). */
-function playerColumnBorderClass(): string {
-  return "border border-slate-gridline";
-}
-
-/**
- * Main score grid body only — leader/dealer tints are not applied to column
- * headers or total row (or modal header / total rows).
- */
-function playerColumnBodyBgClass(pid: string): string {
-  if (isLeaderColumn(pid)) {
-    return "bg-emerald-50";
-  }
-  if (isDealerColumn(pid)) {
-    return "bg-slate-100";
-  }
-  return "bg-white";
-}
-
-/** Round row where scores are entered next (playing only). */
-function isActiveScoringRow(ri: number): boolean {
-  return game.phase === "playing" && ri === game.currentRoundIndex;
-}
-
-function whistSectionTopBorder(ri: number): string {
-  if (game.gameType !== "whist") {
-    return "";
-  }
-  return whistRowStartsSection(ri, game.playerIds.length)
-    ? "border-t-2 border-t-slate-gridline"
-    : "";
-}
 
 interface RoundSnapshot {
   [playerId: string]: number | undefined;
@@ -191,8 +93,30 @@ function openModalForRound(ri: number) {
   modalRoundIndex.value = ri;
 }
 
-function onRowClick(ri: number) {
-  openModalForRound(ri);
+function rowClickable(ri: number): boolean {
+  if (game.phase === "playing") {
+    return ri <= game.currentRoundIndex;
+  }
+  if (game.phase === "finished") {
+    return true;
+  }
+  return false;
+}
+
+function updateScore(playerId: string, raw: string) {
+  const ri = modalRoundIndex.value;
+  if (ri === null) {
+    return;
+  }
+  if (raw === "" || raw === "-") {
+    game.setRoundScoreForRound(ri, playerId, 0);
+    return;
+  }
+  const n = Number(raw);
+  if (Number.isNaN(n)) {
+    return;
+  }
+  game.setRoundScoreForRound(ri, playerId, n);
 }
 
 const isEditingPastOrFinishedRound = computed(() => {
@@ -238,324 +162,29 @@ function closeScoreModal() {
   const ri = modalRoundIndex.value;
   modalRoundSnapshot.value = null;
   if (ri !== null) {
-    game.flushRoundScores(ri);
-    if (game.phase === "playing" && game.limitReached) {
-      game.finishGame();
-    } else if (
-      game.phase === "playing" &&
-      ri === game.currentRoundIndex &&
-      game.canAdvanceRound
-    ) {
-      game.advanceRound();
-    }
+    game.onScoreModalCommitted(ri);
   }
   modalRoundIndex.value = null;
 }
-
-const modalPanelRef = ref<HTMLElement | null>(null);
-
-watch(modalRoundIndex, (ri: number | null) => {
-  if (!import.meta.client) {
-    return;
-  }
-  if (ri !== null) {
-    nextTick(() => {
-      modalPanelRef.value?.querySelector("input")?.focus();
-    });
-  }
-});
 </script>
 
 <template>
   <div
     class="w-full overflow-hidden rounded-2xl border-2 border-slate-accent/35 bg-white shadow-soft"
   >
-    <p
-      v-if="game.phase === 'playing'"
-      class="border-b border-slate-gridline/80 bg-slate-rail px-4 py-2 text-xs font-medium text-slate-700"
-    >
-      Tap the highlighted row to enter scores, or a row above to fix a past
-      round.
-    </p>
-    <p
-      v-else-if="game.phase === 'finished'"
-      class="border-b border-slate-gridline/80 bg-slate-rail px-4 py-2 text-xs font-medium text-slate-700"
-    >
-      Tap any round row to edit scores.
-    </p>
-
-    <div class="w-full overflow-x-auto p-4 sm:p-5">
-      <table class="w-full min-w-[480px] table-fixed border-collapse text-sm">
-        <caption class="sr-only">
-          Score grid: one row per round or deal step; columns are players.
-          Totals are running sums.
-        </caption>
-        <colgroup>
-          <col class="w-[5rem] sm:w-[5.5rem]" />
-          <col v-for="pid in game.playerIds" :key="`colgroup-${pid}`" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th
-              scope="col"
-              class="border border-slate-gridline bg-slate-headFill px-1.5 py-2 text-center text-xs font-semibold text-slate-inkMuted"
-            >
-              <span class="sr-only">Round</span>
-            </th>
-            <th
-              v-for="pid in game.playerIds"
-              :key="pid"
-              scope="col"
-              :class="[
-                playerColumnBorderClass(),
-                'min-w-0 bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink',
-              ]"
-            >
-              <span class="block font-semibold">{{
-                game.playerNames[pid]
-              }}</span>
-              <span
-                v-if="isDealerColumn(pid)"
-                class="mt-1 block text-[10px] font-normal uppercase tracking-wide text-slate-600"
-                >Dealer</span
-              >
-              <span
-                v-if="game.scoreboardLeaderPlayerIds.includes(pid)"
-                class="mt-0.5 block text-[10px] font-bold uppercase tracking-wide text-slate-accentDeep"
-                >Leader</span
-              >
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="ri in tableRoundIndices"
-            :key="ri"
-            :class="[rowClickable(ri) ? 'cursor-pointer' : '']"
-            :tabindex="rowClickable(ri) ? 0 : -1"
-            :aria-label="rowAriaLabel(ri)"
-            @click="onRowClick(ri)"
-            @keydown.enter.prevent="openModalForRound(ri)"
-            @keydown.space.prevent="openModalForRound(ri)"
-          >
-            <th
-              scope="row"
-              :class="[
-                'border border-slate-gridline px-1.5 text-center text-xs font-semibold tabular-nums leading-tight text-slate-800',
-                isActiveScoringRow(ri)
-                  ? 'border-l-[3px] border-l-slate-accent bg-slate-mint py-2 text-slate-ink shadow-[inset_0_0_0_1px_rgb(0_207_200_/_0.2)]'
-                  : 'bg-slate-headFill py-1.5',
-                whistSectionTopBorder(ri),
-              ]"
-            >
-              {{ rowLabelForIndex(ri) }}
-            </th>
-            <td
-              v-for="pid in game.playerIds"
-              :key="`${ri}-${pid}`"
-              :class="[
-                playerColumnBorderClass(),
-                'min-w-0 px-1 text-center text-sm text-slate-800',
-                isActiveScoringRow(ri)
-                  ? 'py-2 shadow-[inset_0_0_0_2px_rgb(0_207_200_/_0.35)]'
-                  : 'py-1',
-                playerColumnBodyBgClass(pid),
-                whistSectionTopBorder(ri),
-              ]"
-            >
-              <template v-if="rowCellModes[ri] === 'future'">
-                <span class="tabular-nums" />
-              </template>
-              <template v-else-if="rowCellModes[ri] === 'past'">
-                <span class="tabular-nums">{{ cellValue(ri, pid) }}</span>
-              </template>
-              <template v-else-if="rowCellModes[ri] === 'current-input'">
-                <span class="tabular-nums">{{ currentCell(pid) }}</span>
-              </template>
-              <template v-else>
-                <span class="tabular-nums">{{ cellValue(ri, pid) }}</span>
-              </template>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th
-              scope="row"
-              class="border border-slate-gridline bg-slate-footFill px-1.5 py-2 text-center text-xs font-semibold text-slate-ink"
-            >
-              Total
-            </th>
-            <td
-              v-for="pid in game.playerIds"
-              :key="`t-${pid}`"
-              :class="[
-                playerColumnBorderClass(),
-                'min-w-0 bg-slate-footFill px-2 py-2 text-center text-sm font-semibold text-slate-ink',
-              ]"
-            >
-              {{ game.runningTotals[pid] ?? 0 }}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-
-    <Teleport to="body">
-      <div
-        v-if="modalRoundIndex !== null"
-        class="fixed inset-0 z-[200] flex items-end justify-center p-4 sm:items-center"
-        role="presentation"
-      >
-        <div
-          class="absolute inset-0 backdrop-blur-[2px]"
-          style="background-color: var(--ss-scrim)"
-          aria-hidden="true"
-        />
-        <div
-          ref="modalPanelRef"
-          role="dialog"
-          aria-modal="true"
-          :aria-labelledby="'score-modal-title'"
-          class="relative z-10 flex max-h-[min(90dvh,640px)] w-full max-w-[min(96vw,56rem)] flex-col overflow-hidden rounded-2xl border border-slate-gridline/90 bg-white shadow-lift"
-        >
-          <div
-            class="border-b border-slate-gridline/85 bg-slate-ice/90 px-4 py-3"
-          >
-            <h2
-              id="score-modal-title"
-              class="font-display text-lg font-semibold text-slate-ink"
-            >
-              {{ rowLabelForIndex(modalRoundIndex) }}
-            </h2>
-            <p class="mt-0.5 text-xs text-slate-600">
-              <template v-if="isEditingPastOrFinishedRound">
-                Edit scores, then tap Done.
-              </template>
-              <template v-else>
-                Enter this round for everyone, then tap Done. The next round
-                starts when this one is complete.
-              </template>
-            </p>
-          </div>
-          <div class="min-h-0 flex-1 overflow-y-auto overflow-x-auto px-4 py-4">
-            <table class="w-full min-w-[480px] border-collapse text-sm">
-              <caption class="sr-only">
-                Scores for this round: one column per player, rows before, this
-                round, after.
-              </caption>
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-left text-xs font-semibold text-slate-inkMuted"
-                  >
-                    <span class="sr-only">Metric</span>
-                  </th>
-                  <th
-                    v-for="pid in game.playerIds"
-                    :key="`mh-${pid}`"
-                    scope="col"
-                    :class="[
-                      playerColumnBorderClass(),
-                      'bg-slate-headFill px-2 py-2 text-center text-xs font-semibold text-slate-ink',
-                    ]"
-                  >
-                    {{ game.playerNames[pid] }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th
-                    scope="row"
-                    class="border border-slate-gridline bg-slate-headFill px-2 py-2 text-left text-xs font-medium text-slate-800"
-                  >
-                    Total before
-                  </th>
-                  <td
-                    v-for="pid in game.playerIds"
-                    :key="`tb-${pid}`"
-                    :class="[
-                      playerColumnBorderClass(),
-                      'bg-white px-2 py-2 text-center tabular-nums text-slate-800',
-                    ]"
-                  >
-                    {{ totalBeforeRound(modalRoundIndex, pid) }}
-                  </td>
-                </tr>
-                <tr>
-                  <th
-                    scope="row"
-                    class="border border-slate-gridline bg-slate-mint/50 px-2 py-2 text-left text-xs font-semibold text-slate-800"
-                  >
-                    This round
-                  </th>
-                  <td
-                    v-for="pid in game.playerIds"
-                    :key="`tr-${pid}`"
-                    class="border border-slate-gridline bg-slate-mint/35 px-1 py-1.5"
-                  >
-                    <label class="sr-only" :for="`round-score-${pid}`">
-                      {{ game.playerNames[pid] }}, this round
-                    </label>
-                    <input
-                      :id="`round-score-${pid}`"
-                      type="number"
-                      inputmode="numeric"
-                      class="min-h-[44px] w-full min-w-[3.25rem] rounded border border-slate-gridline bg-white px-2 py-1.5 text-center tabular-nums text-slate-900 shadow-sm"
-                      :value="modalCell(pid)"
-                      :aria-label="`${game.playerNames[pid]}, ${rowLabelForIndex(modalRoundIndex)}`"
-                      @input="
-                        updateScore(
-                          pid,
-                          ($event.target as HTMLInputElement).value,
-                        )
-                      "
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <th
-                    scope="row"
-                    class="border border-slate-gridline bg-slate-footFill px-2 py-2 text-left text-xs font-semibold text-slate-ink"
-                  >
-                    Total after
-                  </th>
-                  <td
-                    v-for="pid in game.playerIds"
-                    :key="`ta-${pid}`"
-                    :class="[
-                      playerColumnBorderClass(),
-                      'bg-slate-footFill px-2 py-2 text-center text-sm font-semibold tabular-nums text-slate-ink',
-                    ]"
-                  >
-                    {{ projectedTotalThroughRound(modalRoundIndex, pid) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div
-            class="flex flex-wrap justify-end gap-2 border-t border-slate-gridline/85 bg-slate-rail px-4 py-4"
-          >
-            <SlateButton
-              variant="danger"
-              min-width="sm"
-              @click="cancelScoreModal"
-            >
-              Cancel
-            </SlateButton>
-            <SlateButton
-              variant="primary"
-              min-width="sm"
-              @click="closeScoreModal"
-            >
-              Done
-            </SlateButton>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <GameScoreboardHints :phase="game.phase" />
+    <GameScoreGrid :model="gridModel" @open-round="openModalForRound" />
+    <GameScoreRoundModal
+      v-if="modalRoundIndex !== null"
+      :round-index="modalRoundIndex"
+      :row-title="rowLabelForIndex(modalRoundIndex)"
+      :player-ids="game.playerIds"
+      :player-names="game.playerNames"
+      :scores="game.scores"
+      :is-editing-past-or-finished-round="isEditingPastOrFinishedRound"
+      @cancel="cancelScoreModal"
+      @done="closeScoreModal"
+      @update-score="updateScore($event.playerId, $event.raw)"
+    />
   </div>
 </template>
