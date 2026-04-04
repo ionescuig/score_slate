@@ -38,6 +38,7 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 - **Debugging**: `.cursor/rules/debugging.mdc` — root cause before fixes.
 - **Rules authoring**: `.cursor/rules/rules-authoring.mdc` — when editing `.cursor/rules/*.mdc`.
 - **UI review persona**: `internal/AI Prompts/AI UI Industrial Reviewer.md` — use when reviewing UI/UX like an industrial product designer.
+- **Design skills (Impeccable)**: `.cursor/rules/design-skills.mdc` — which `.agents/skills/` to read for UI/design tasks; read `SKILL.md` before implementing or reviewing.
 
 ## Commit messages
 
