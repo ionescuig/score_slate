@@ -2,7 +2,7 @@
 
 Technical documentation for **Score Slate** — implementation patterns, boundaries, and testing. Product requirements live in `internal/`; this folder is for how we build the app.
 
-**Implementation (code):** Nuxt app under `app/` — `pages/` (home, setup, play), `stores/` (player pool + active session), `utils/game/` (pure scoring helpers), `utils/pdf/` (shared PDF shell), `components/game-scoreboard/` (grid + export).
+**Implementation (code):** Nuxt app under `app/` — `pages/` (home, setup, play), `stores/` (`usePlayerStore`, `useGameStore`), `composables/` (play/setup/PDF/landscape/score-modal orchestration), `plugins/persist.client.ts` (hydrate + subscribe to `localStorage`), `utils/game/` (pure scoring + scoreboard view-model helpers), `utils/pdf/` (PDF shell), `components/game-scoreboard/` (grid, modal, hints).
 
 ## Structure
 

@@ -13,7 +13,8 @@
 tests/
   unit/
     domain/       # dealer, mexican-train, whist, winners
-    game/         # persistence normalisation (localStorage shape)
+    game/         # pure helpers: persist shape, round visibility, running totals,
+                  # scoreboard row rules, grid view-model build, rummy setup, etc.
     pdf/          # PDF export payload (pure mapping)
     stores/       # Pinia player + game
 ```

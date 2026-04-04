@@ -6,7 +6,7 @@ Same idea as a larger Nuxt app, scaled down:
 
 1. **Base** — Low-level building blocks (buttons, inputs, layout primitives) with stable props and Tailwind-based styling. No game-specific copy or rules.
 2. **Common** — Repeated patterns built from base (e.g. a standardized page header, numeric cell wrapper) that are still generic across games.
-3. **Domain** — Game flow and scoreboard (`components/game-*`, `components/scoreboard-*`, etc.). They know about players, rounds, and actions; they do **not** embed scoring formulas — those come from pure helpers or the store.
+3. **Domain** — Game flow and scoreboard (`components/game-scoreboard/`, setup UI on `pages/setup/`, shared tiles/buttons at component root). They know about players, rounds, and actions; they do **not** embed scoring formulas — those come from pure helpers or the store.
 
 ## Conventions
 

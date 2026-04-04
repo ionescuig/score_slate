@@ -76,6 +76,7 @@ watch(
         role="dialog"
         aria-modal="true"
         aria-labelledby="score-modal-title"
+        aria-describedby="score-modal-desc"
         class="relative z-10 flex max-h-[min(90dvh,640px)] w-full max-w-[min(96vw,56rem)] flex-col overflow-hidden rounded-2xl border border-slate-gridline/90 bg-white shadow-lift"
       >
         <div
@@ -87,12 +88,12 @@ watch(
           >
             {{ rowTitle }}
           </h2>
-          <p class="mt-0.5 text-xs text-slate-600">
+          <p id="score-modal-desc" class="mt-0.5 text-xs text-slate-600">
             <template v-if="isEditingPastOrFinishedRound">
-              Edit scores, then tap Done.
+              Edit scores, then choose Done.
             </template>
             <template v-else>
-              Enter this round for everyone, then tap Done. The next round
+              Enter this round for everyone, then choose Done. The next round
               starts when this one is complete.
             </template>
           </p>

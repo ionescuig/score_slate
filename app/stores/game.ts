@@ -11,6 +11,7 @@ import {
   rummyLimitReached,
 } from '~/utils/game/winners'
 import { randomId } from '~/utils/random-id'
+import { totalThroughRoundInclusive } from '~/utils/game/running-totals'
 
 function rowLabelsFor(
   gameType: GameType,
@@ -47,16 +48,11 @@ export const useGameStore = defineStore('game', {
     runningTotals(state): Record<string, number> {
       const totals: Record<string, number> = {}
       for (const pid of state.playerIds) {
-        totals[pid] = 0
-      }
-      for (let r = 0; r <= state.currentRoundIndex; r += 1) {
-        const row = state.scores[r]
-        if (!row) {
-          continue
-        }
-        for (const pid of state.playerIds) {
-          totals[pid] = (totals[pid] ?? 0) + (row[pid] ?? 0)
-        }
+        totals[pid] = totalThroughRoundInclusive(
+          state.scores,
+          state.currentRoundIndex,
+          pid,
+        )
       }
       return totals
     },

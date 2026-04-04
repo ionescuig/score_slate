@@ -6,9 +6,12 @@ import {
 } from "~/utils/game/score-display";
 import { scoreboardPlayerColumnStyle } from "~/utils/game/scoreboard-player-style";
 import { whistRowStartsSection } from "~/utils/game/whist";
+import { scoreboardRowIsClickable } from "~/utils/game/scoreboard-row-click";
 
 const props = defineProps<{
   model: ScoreboardGridModel;
+  /** Optional id of element that describes the grid (e.g. hint copy above the table). */
+  ariaDescribedBy?: string;
 }>();
 
 const emit = defineEmits<{
@@ -58,13 +61,11 @@ function playerColumnBorderClass(): string {
 }
 
 function rowClickable(ri: number): boolean {
-  if (props.model.phase === "playing") {
-    return ri <= props.model.currentRoundIndex;
-  }
-  if (props.model.phase === "finished") {
-    return true;
-  }
-  return false;
+  return scoreboardRowIsClickable(
+    props.model.phase,
+    ri,
+    props.model.currentRoundIndex,
+  );
 }
 
 function rowAriaLabel(ri: number): string | undefined {
@@ -100,7 +101,10 @@ function onOpenRound(ri: number) {
 
 <template>
   <div class="w-full overflow-x-auto p-4 sm:p-5">
-    <table class="w-full min-w-[480px] table-fixed border-collapse text-sm">
+    <table
+      class="w-full min-w-[480px] table-fixed border-collapse text-sm"
+      :aria-describedby="ariaDescribedBy || undefined"
+    >
       <caption class="sr-only">
         Score grid: one row per round or deal step; columns are players; last
         row is running totals. In body cells only, leader columns use a light
@@ -148,7 +152,11 @@ function onOpenRound(ri: number) {
         <tr
           v-for="ri in model.tableRoundIndices"
           :key="ri"
-          :class="[rowClickable(ri) ? 'cursor-pointer' : '']"
+          :class="[
+            rowClickable(ri)
+              ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white'
+              : '',
+          ]"
           :tabindex="rowClickable(ri) ? 0 : -1"
           :aria-label="rowAriaLabel(ri)"
           @click="onOpenRound(ri)"

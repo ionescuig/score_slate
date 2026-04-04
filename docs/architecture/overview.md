@@ -14,9 +14,9 @@ Roughly top to bottom:
 | ----- | -------------- |
 | **Pages** | Routes, layout, compose domain components; stay thin. |
 | **Domain components** | Game setup, scoreboard grid, export triggers — UI for one feature area. |
-| **Composables** | Orchestration: bind UI to stores, coordinate steps (e.g. start round, finish game). |
+| **Composables** | Orchestration: bind UI to stores, coordinate steps (e.g. `usePlayPage`, `useScoreRoundModal`, landscape/PDF hooks). |
 | **Pinia stores** | Reactive session state: active game, players pool, UI-safe snapshots for persistence. |
-| **Domain logic (pure)** | Scoring rules, win detection, shared scoreboard/PDF row labels (`app/utils/game/score-display.ts`), per-game math — **functions** with no Vue/Pinia imports. Easy to unit test. |
+| **Domain logic (pure)** | Scoring rules, win detection, shared scoreboard/PDF row labels (`app/utils/game/score-display.ts`), scoreboard view-model assembly (`app/utils/game/scoreboard-grid-build.ts`), per-game math — **functions** with no Vue/Pinia imports. Easy to unit test. |
 | **Persistence** | Serialize/deserialize app state to `localStorage`; only touch storage behind `import.meta.client` (see `.cursor/rules/ssr-patterns.mdc`). |
 
 ## Principles (aligned with a ports-and-adapters style)

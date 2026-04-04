@@ -1,34 +1,22 @@
 <script setup lang="ts">
 import { ArrowDownTrayIcon, PrinterIcon } from "@heroicons/vue/24/outline";
-import { displayTitleForGameType } from "~/utils/game/game-types";
 
 /** Session lives in Pinia + localStorage (client). SSR would render default store and mismatch after hydrate. */
 definePageMeta({
   ssr: false,
 });
 
-const { isPortrait, canLockOrientation, requestLandscapeLock } =
-  useLandscapePresentation();
-
-const game = useGameStore();
-const { downloadPdf, printPdf } = useScoreSlatePdf();
-
-const title = computed(() => displayTitleForGameType(game.gameType));
-
-const winnerNames = computed(() =>
-  game.leaderPlayerIds.map((id: string) => game.playerNames[id] ?? id),
-);
-
-/** Avoid hydration mismatch: Pinia + localStorage only exist on client after plugins run. */
-const playReady = ref(false);
-
-onMounted(() => {
-  if (game.phase === "idle") {
-    void navigateTo("/");
-    return;
-  }
-  playReady.value = true;
-});
+const {
+  game,
+  canLockOrientation,
+  requestLandscapeLock,
+  downloadPdf,
+  printPdf,
+  title,
+  winnerNames,
+  playReady,
+  showPortraitHint,
+} = usePlayPage();
 </script>
 
 <template>
@@ -40,12 +28,9 @@ onMounted(() => {
     <p v-if="!playReady" class="sr-only">Loading Score Slate…</p>
     <template v-if="playReady">
       <div
-        v-if="
-          !game.playPortraitHintDismissed &&
-          isPortrait &&
-          (game.phase === 'playing' || game.phase === 'finished')
-        "
+        v-if="showPortraitHint"
         role="status"
+        aria-live="polite"
         class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-accent/35 bg-slate-accent/10 px-4 py-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
       >
         <p class="min-w-0 text-sm font-medium text-slate-800">
@@ -73,7 +58,7 @@ onMounted(() => {
             variant="default"
             density="compact"
             label-tone="muted"
-            aria-label="Stay in portrait; hide until a new game or Discard session"
+            aria-label="Stay in portrait and hide this reminder until you start a new game or discard the session from Home"
             @click="game.dismissPlayPortraitHint()"
           >
             Ignore
@@ -183,6 +168,8 @@ onMounted(() => {
 
       <section
         v-if="game.phase === 'finished'"
+        role="status"
+        aria-live="polite"
         class="mt-8 rounded-2xl border border-slate-accent/30 bg-white p-5 shadow-soft"
       >
         <h2

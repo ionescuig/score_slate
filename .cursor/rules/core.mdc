@@ -44,6 +44,8 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 
 Prefer a single imperative subject line (~72 chars). Add a body only when the change set is large or complex.
 
+Do not include tool attribution in commit messages or bodies (e.g. “Made with Cursor”, Co-Authored-By for the editor, or similar).
+
 ## Git and destructive operations
 
 Guardrails aligned with **visualisation-frontend** (plans: *the user commits; no automated commits*) and with **remote / destructive** safety expectations. This section is the always-on rule for git and destructive commands in this repo.
