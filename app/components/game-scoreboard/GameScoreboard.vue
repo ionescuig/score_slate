@@ -2,7 +2,7 @@
 import {
   rowLabelForScoreSheet,
   scoreCellDisplayString,
-} from "~/utils/pdf/score-sheet-export";
+} from "~/utils/game/score-display";
 import { whistRowStartsSection } from "~/utils/game/whist";
 
 const game = useGameStore();
@@ -141,7 +141,7 @@ function restoreRoundFromSnapshot(ri: number, snap: RoundSnapshot) {
       row[pid] = v;
     }
   }
-  game.scores[ri] = row;
+  game.replaceRoundScoresRow(ri, row);
 }
 
 function openModalForRound(ri: number) {

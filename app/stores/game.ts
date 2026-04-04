@@ -271,6 +271,16 @@ export const useGameStore = defineStore('game', {
         }
       }
     },
+    /** Replace one round row (e.g. cancel modal — restore snapshot). */
+    replaceRoundScoresRow(roundIndex: number, row: Record<string, number>) {
+      if (this.phase !== 'playing' && this.phase !== 'finished') {
+        return
+      }
+      if (roundIndex < 0 || roundIndex >= this.rowLabels.length) {
+        return
+      }
+      this.scores[roundIndex] = { ...row }
+    },
     advanceRound() {
       if (this.phase !== 'playing') {
         return

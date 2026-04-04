@@ -1,18 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {
-  buildScoreSlatePdfOptions,
-  rowLabelForScoreSheet,
-} from '../../../app/utils/pdf/score-sheet-export'
-
-describe('rowLabelForScoreSheet', () => {
-  it('labels rummy rounds', () => {
-    expect(rowLabelForScoreSheet('rummy', [1, 2], 0)).toBe('Round 1')
-  })
-
-  it('labels pip/cards as plain numbers', () => {
-    expect(rowLabelForScoreSheet('mexican-train', [12, 11], 0)).toBe('12')
-  })
-})
+import { buildScoreSlatePdfOptions } from '../../../app/utils/pdf/score-sheet-export'
 
 describe('buildScoreSlatePdfOptions', () => {
   it('uses display title for game name in PDF subtitle', () => {

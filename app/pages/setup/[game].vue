@@ -144,18 +144,31 @@ const title = computed(() => `${displayTitleForGameType(gameType.value)} setup`)
     v-if="gameType && bounds"
     class="w-full py-8 md:py-10"
   >
-    <NuxtLink
-      to="/"
-      class="text-sm font-medium text-slate-inkMuted transition-colors hover:text-slate-accentDeep hover:underline"
+    <header
+      class="mb-6 rounded-2xl border border-gray-200/90 bg-white p-5 shadow-soft md:p-6"
+      aria-label="Setup header"
     >
-      ← Back
-    </NuxtLink>
-    <h1 class="font-display mt-5 text-3xl font-semibold tracking-tight text-slate-ink">
-      {{ title }}
-    </h1>
-    <p class="mt-2 text-base text-slate-600">
-      Choose {{ bounds.min }}–{{ bounds.max }} players.
-    </p>
+      <nav aria-label="Site">
+        <NuxtLink
+          to="/"
+          class="text-sm font-medium text-slate-inkMuted transition-colors hover:text-slate-accentDeep hover:underline"
+        >
+          ← Back
+        </NuxtLink>
+      </nav>
+      <h1
+        class="font-display mt-4 text-[1.625rem] font-semibold leading-[1.12] tracking-tight text-slate-ink md:text-[2rem]"
+      >
+        {{ title }}
+      </h1>
+      <div
+        class="mt-5 h-px w-16 max-w-full rounded-full bg-gradient-to-r from-slate-accent via-slate-accentBright to-slate-accentDeep"
+        aria-hidden="true"
+      />
+      <p class="mt-5 text-base leading-relaxed text-slate-600">
+        Choose {{ bounds.min }}–{{ bounds.max }} players.
+      </p>
+    </header>
 
     <h2 class="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-slate-inkMuted">
       Players

@@ -1,4 +1,8 @@
 import { GAME_TYPE_DISPLAY_TITLE, type GameType } from '~/utils/game/game-types'
+import {
+  rowLabelForScoreSheet,
+  scoreCellDisplayString,
+} from '~/utils/game/score-display'
 import type { BuildScoreSlatePdfOptions } from '~/utils/pdf/score-slate-pdf'
 
 export interface ScoreSheetPdfSnapshot {
@@ -10,32 +14,7 @@ export interface ScoreSheetPdfSnapshot {
   runningTotals: Record<string, number>
 }
 
-export function rowLabelForScoreSheet(
-  gameType: GameType,
-  rowLabels: number[],
-  i: number,
-): string {
-  const v = rowLabels[i]
-  if (v === undefined) {
-    return ''
-  }
-  if (gameType === 'rummy') {
-    return `Round ${v}`
-  }
-  return String(v)
-}
-
-export function scoreCellDisplayString(
-  scores: Record<number, Record<string, number>>,
-  roundIdx: number,
-  playerId: string,
-): string {
-  const v = scores[roundIdx]?.[playerId]
-  if (v === undefined || v === null) {
-    return ''
-  }
-  return String(v)
-}
+export { rowLabelForScoreSheet, scoreCellDisplayString }
 
 /** Pure mapping from session snapshot → PDF options (shared with UI table labels). */
 export function buildScoreSlatePdfOptions(

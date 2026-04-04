@@ -104,6 +104,23 @@ describe('useGameStore', () => {
     expect(g.scoreboardLeaderPlayerIds).toEqual(['p1'])
   })
 
+  it('replaceRoundScoresRow restores a round snapshot', () => {
+    const g = useGameStore()
+    g.startGame({
+      gameType: 'rummy',
+      playerIds: ['p1', 'p2'],
+      playerNames: { p1: 'A', p2: 'B' },
+      rummyRounds: 5,
+      rummyLimit: null,
+    })
+    g.setRoundScore('p1', 10)
+    g.setRoundScore('p2', 20)
+    g.replaceRoundScoresRow(0, { p1: 1, p2: 2 })
+    expect(g.scores[0]).toEqual({ p1: 1, p2: 2 })
+    expect(g.runningTotals.p1).toBe(1)
+    expect(g.runningTotals.p2).toBe(2)
+  })
+
   it('rummy without round limit adds rows until Finish', () => {
     const g = useGameStore()
     g.startGame({
