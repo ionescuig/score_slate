@@ -1,0 +1,40 @@
+# Project-local Graphify exclusions for score_slate
+# Keep graph focused on source, stores, composables, and tests.
+
+# Dependencies and package caches
+node_modules/
+
+# Nuxt/Nitro/build outputs
+.nuxt/
+.nitro/
+.output/
+dist/
+.cache/
+.data/
+
+# Tool/editor metadata
+.cursor/
+.claude/
+.opencode/
+.vscode/
+.idea/
+
+# Test artifacts and reports
+coverage/
+test-results/
+playwright-report/
+tests/test-results/
+tests/screenshots/
+tests/videos/
+
+# Logs and temporary folders
+logs/
+*.log
+temp/
+TODO/
+
+# Generated project files
+app/generated/
+
+# Graphify output (avoid indexing itself)
+graphify-out/

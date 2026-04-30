@@ -142,6 +142,9 @@ vite.config.ts.timestamp-*
 # Nuxt 4 / Score Slate
 .output/
 
+# Tool directories
+graphify-out/
+
 # Cursor — local plans (optional: remove to commit plans)
 .cursor/plans/
 
