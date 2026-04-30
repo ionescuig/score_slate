@@ -1,5 +1,6 @@
 import { defineEventHandler } from "h3";
 
+// Coolify / proxy health probe (no auth, cheap JSON).
 export default defineEventHandler(function () {
   return {
     ok: true,
