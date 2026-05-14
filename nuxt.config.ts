@@ -7,6 +7,10 @@ export default defineNuxtConfig({
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? '',
       /** Absolute URL to default Open Graph image (e.g. 1200×630). Optional until you host one. */
       ogImageUrl: process.env.NUXT_PUBLIC_OG_IMAGE_URL ?? '',
+      /** Full URL to Umami `script.js` (e.g. https://umami.example.com/script.js). Empty = no tracker. */
+      umamiScriptUrl: process.env.NUXT_PUBLIC_UMAMI_SCRIPT_URL ?? '',
+      /** Umami site `data-website-id`. Empty = no tracker. */
+      umamiWebsiteId: process.env.NUXT_PUBLIC_UMAMI_WEBSITE_ID ?? '',
     },
   },
   routeRules: {

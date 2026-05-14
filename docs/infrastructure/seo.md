@@ -11,6 +11,7 @@ Score Slate is mostly a **client-heavy PWA** (Pinia + `localStorage`), but **mar
 | **Open Graph / Twitter** | `app.vue`: `og:site_name`, `og:type`, `og:locale`, `twitter:card`. Per-page `useSeoMeta` on home, setup, and play. |
 | **Canonical + `og:url`** | `useScoreSlateRouteSeo()` in `app/layouts/default.vue` when `NUXT_PUBLIC_SITE_URL` is set (see below). |
 | **Default share image** | Optional `NUXT_PUBLIC_OG_IMAGE_URL` (absolute URL). Omitted until you host an image. |
+| **Umami (optional)** | Client plugin `app/plugins/umami.client.ts` when `NUXT_PUBLIC_UMAMI_SCRIPT_URL` + `NUXT_PUBLIC_UMAMI_WEBSITE_ID` are set. |
 | **`/play`** | `useSeoMeta({ robots: 'noindex, nofollow' })` — session shell, SSR off; not meant as a landing page. |
 | **robots.txt** | `public/robots.txt` allows crawlers; `/play` is discouraged via meta, not `Disallow` (so you can change mind without duplicate policy). |
 
@@ -22,6 +23,8 @@ Set in the host’s env or a root `.env` (not committed):
 |----------|---------|
 | `NUXT_PUBLIC_SITE_URL` | Public site origin **without** trailing slash, e.g. `https://scoreslate.example.com`. Enables `<link rel="canonical">` and `og:url` on every layout-wrapped page. |
 | `NUXT_PUBLIC_OG_IMAGE_URL` | Absolute URL to a default OG image (commonly **1200×630**). Shown when links are shared if the page does not override `og:image`. |
+| `NUXT_PUBLIC_UMAMI_SCRIPT_URL` | Full URL to your self-hosted Umami `script.js`. If unset (or `NUXT_PUBLIC_UMAMI_WEBSITE_ID` unset), no tracker is injected. |
+| `NUXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami site id (`data-website-id` from the Umami UI). Pair with `NUXT_PUBLIC_UMAMI_SCRIPT_URL`. |
 
 Example (see also `.env.example`):
 
@@ -38,9 +41,13 @@ Until these are set, relative URLs and local dev are fine; previews may not show
 2. Temporarily set `NUXT_PUBLIC_SITE_URL=http://localhost:3000` and confirm `canonical` and `og:url` appear (optional smoke test).
 3. After deploy, use your host’s inspector or [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) / [Twitter Card Validator](https://cards-dev.twitter.com/validator) if still available.
 
+## Analytics (Umami)
+
+Optional **self-hosted Umami** loads via `app/plugins/umami.client.ts` when both `NUXT_PUBLIC_UMAMI_SCRIPT_URL` and `NUXT_PUBLIC_UMAMI_WEBSITE_ID` are set (e.g. in Coolify). Omit them in local dev to avoid polluting stats.
+
 ## Backlog (do later)
 
-Prioritize when you have a **production domain** and **analytics** needs.
+Prioritize when you have a **production domain** and further **SEO** needs.
 
 1. **OG image asset** — Add a branded `og.png` (or WebP + `<meta>` if you standardize) under `public/` or your CDN; set `NUXT_PUBLIC_OG_IMAGE_URL`.
 2. **Sitemap** — Add `@nuxtjs/sitemap` or static `sitemap.xml` listing `/`, `/setup/rummy`, `/setup/mexican-train`, `/setup/whist` (and only public URLs you want indexed).
