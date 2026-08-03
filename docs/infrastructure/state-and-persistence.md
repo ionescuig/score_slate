@@ -22,4 +22,4 @@ The **play** route (`app/pages/play.vue`) sets `definePageMeta({ ssr: false })` 
 ## Related
 
 - `docs/architecture/overview.md`
-- `internal/Score Slate PDR.md` §6
+- `docs/product/pdr.md` §6

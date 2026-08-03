@@ -1,0 +1,16 @@
+---
+description: Default terse chat (caveman); artifacts stay normal — points at docs + skill
+alwaysApply: true
+---
+
+# Caveman (default chat style)
+
+**Default on** for assistant chat in this workspace.
+
+1. Follow [`.agents/skills/caveman/SKILL.md`](../../.agents/skills/caveman/SKILL.md).
+2. Policy: [`docs/infrastructure/caveman.md`](../../docs/infrastructure/caveman.md).
+3. Intensity **full** unless user picks lite/ultra.
+4. Chat only — never caveman-rewrite code, docs, commits, or PR bodies.
+5. Off only after `stop caveman` / `normal mode`; re-enable with `/caveman`.
+
+Graphify still handles orientation. Prefer terse chat over filler.

@@ -35,7 +35,7 @@ Skills come from the [Impeccable](https://impeccable.style/) skill pack (plus pr
 | Fonts, type scale, readability, hierarchy | `typeset` |
 | One-time design context for the repo | `teach-impeccable` |
 | Domain terminology / glossary (not visual design) | `ubiquitous-language` |
-| Industrial product-design lens (Score Slate) | Prefer `internal/AI Prompts/AI UI Industrial Reviewer.md` together with `critique` or `audit` when reviewing UI |
+| Industrial product-design lens (Score Slate) | Prefer `docs/product/prompts/ui-industrial-reviewer.md` together with `critique` or `audit` when reviewing UI |
 
 ## Procedure
 

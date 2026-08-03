@@ -7,11 +7,13 @@ alwaysApply: true
 
 Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Playwright when E2E exists).
 
+**Agent entry:** [`.agents/README.md`](../../.agents/README.md) · **quality gates:** [`docs/infrastructure/quality-gates.md`](../../docs/infrastructure/quality-gates.md)
+
 ## Product context
 
 - Local-first Score Slate for tabletop games (e.g. Rummy, Mexican Train, Whist). No accounts, no remote database.
-- Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `internal/Score Slate PDR.md` and `.cursor/rules/state-and-persistence.mdc`.
-- Requirements source: `internal/Score Slate Requirements.md`, `internal/Score Slate PDR.md`.
+- Persistence: Pinia for active session state; mirror to `localStorage` for recovery and named players — see `docs/product/pdr.md` and `.cursor/rules/state-and-persistence.mdc`.
+- Requirements source: `docs/product/requirements.md`, `docs/product/pdr.md`.
 
 ## Invariants
 
@@ -24,21 +26,28 @@ Nuxt 4, Vue 3 (Composition API), TypeScript, Pinia, Tailwind CSS, Vitest (and Pl
 - Read the file before editing; match the existing import style, patterns, and conventions exactly.
 - Be conservative: search for existing solutions before creating new patterns, files, or abstractions.
 - Pages: keep page components manageable by extracting logical sections into domain components.
+- Prefer deep `app/utils/game/` + thin composables/pages; Graphify query/path before wide search.
+
+## Non-trivial work
+
+New game mode / scoring / persistence shape / cross-feature seam → [`feature-delivery`](../../.agents/skills/feature-delivery/SKILL.md) (Boundary Contract + Spec) → TDD → [`delivery-gate`](../../.agents/skills/delivery-gate/SKILL.md). Start at target seams; do not ship a shallow slice to deepen later.
 
 ## Project reference map
 
 - **Technical docs**: `docs/README.md` — architecture and infrastructure; keep in sync with meaningful code changes.
-- **Planning / PRD**: `internal/` — requirements and product decisions.
+- **Product**: `docs/product/` — requirements, PDR, palette, prompts. Local scratch/reviews: `internal/` (gitignored).
 - **SSR & client**: `.cursor/rules/ssr-patterns.mdc` — `import.meta.client`, localStorage, hydration.
 - **State**: `.cursor/rules/state-and-persistence.mdc` — Pinia stores, persistence, composables.
-- **Execution**: `.cursor/rules/execution.mdc` — verification, tests, lint, debugging.
-- **Planning workflow**: `.cursor/rules/planning.mdc` — user stories, plan format, TDD slices.
+- **Execution**: `.cursor/rules/execution.mdc` — verification, tests, lint, debugging pointers.
+- **Planning workflow**: `.cursor/rules/planning.mdc` — pointer to feature-delivery + TDD.
 - **Branch reviews**: `.cursor/rules/branch-policy.mdc` — baseline, review structure.
 - **Git & destructive ops** (commits, push, destructive commands): this file — **Git and destructive operations** below.
 - **Debugging**: `.cursor/rules/debugging.mdc` — root cause before fixes.
 - **Rules authoring**: `.cursor/rules/rules-authoring.mdc` — when editing `.cursor/rules/*.mdc`.
-- **UI review persona**: `internal/AI Prompts/AI UI Industrial Reviewer.md` — use when reviewing UI/UX like an industrial product designer.
+- **UI review persona**: `docs/product/prompts/ui-industrial-reviewer.md` — use when reviewing UI/UX like an industrial product designer.
 - **Design skills (Impeccable)**: `.cursor/rules/design-skills.mdc` — which `.agents/skills/` to read for UI/design tasks; read `SKILL.md` before implementing or reviewing.
+- **Graphify**: `.agents/skills/graphify/REFERENCE.md`, `.cursor/rules/graphify.mdc` — orient before wide search on cross-module work.
+- **Caveman**: `.cursor/rules/caveman.mdc` — default terse chat; artifacts stay normal.
 
 ## Commit messages
 

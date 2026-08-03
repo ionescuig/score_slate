@@ -1,13 +1,26 @@
 ---
 name: graphify
-description: Thin project-local wrapper for graphify. Prefer the richer global skill when present; otherwise run a stable minimal graph pipeline.
+description: Thin project-local wrapper for graphify. Day-to-day policy in REFERENCE.md.
 user-invocable: true
 argument-hint: "[path] [--mode deep] [--update] [--directed]"
 ---
 
-# /graphify
+# Graphify (this repository)
 
-Build a project knowledge graph and return key findings, using a reproducible project-level contract.
+Build or refresh the project knowledge graph under `graphify-out/`.
+
+## Policy (all assistants — not only `/graphify`)
+
+Follow **[REFERENCE.md](./REFERENCE.md)** for when to read the graph vs code, wiki/query workflow, maintenance, and stale-graph recovery.
+
+**Mandatory for agents on architecture / cross-module tasks:**
+
+1. Ensure `graphify-out/graph.json` exists and is fresh (`graphify update .` if not).
+2. Orient from wiki / `GRAPH_REPORT.md`.
+3. Run `graphify query` or `graphify path` before wide repo search.
+4. Refresh with `graphify update .` before completing work that changed architecture-relevant code.
+
+**Do not** treat `graphify update` as a substitute for `graphify query` on architecture tasks.
 
 ## Intent
 

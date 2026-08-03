@@ -1,70 +1,57 @@
 ---
-description: Universal execution guardrails — verification, debugging, testing, docs, UI, tooling.
+description: Execution guardrails — verification, quality pointers, Open Brain, git, gh; delivery workflows live in skills
 alwaysApply: true
 ---
 
-## Git and destructive operations
-
-Follow **Git and destructive operations** in `.cursor/rules/core.mdc` (no commit/push/destructive git without explicit user approval).
-
 ## Verification
 
-- Do not claim work is complete, fixed, or passing without running the command that proves it.
-- Before claiming any status: (1) identify the command, (2) run it in full, (3) read the output and exit code, (4) state the result with evidence.
-- Do not use "should work", "probably", or "seems to" in place of actual output.
-- After edits, run the linter diagnostics on every file you changed. Fix any TypeScript/ESLint errors introduced.
-- Final step of non-trivial work: run the project's lint script (e.g. `npm run lint`) and fix issues; report outcome only after seeing output.
+Prove claims with real commands: identify → run → read exit code → report. No "should work". After edits: `read_lints` on touched files; fix diagnostics. Commands + severity: [`quality-gates.md`](../../docs/infrastructure/quality-gates.md).
 
-## Review and scope control
+Non-trivial handoff → [`delivery-gate`](../../.agents/skills/delivery-gate/SKILL.md). Merge/ship → [`done-gate`](../../.agents/skills/done-gate/SKILL.md).
 
-- Separate findings by severity and merge impact:
-  - `critical` / `high`: block merge until fixed in current PR.
-  - `medium`: fix now if low effort; otherwise create explicit follow-up work.
-  - `low`: optional improvement, do not block merge.
-- Default to the smallest safe change for active PRs. Avoid expanding scope unless the user explicitly asks for broader architecture work.
-- Keep refactor budget tight per PR: at most one structural refactor unless the task is explicitly a redesign.
-- Reuse existing modules/patterns before introducing new abstractions.
+## Quality bar (short)
+
+- Non-trivial → [`feature-delivery`](../../.agents/skills/feature-delivery/SKILL.md) before code.
+- Scoring / win rules in deep `app/utils/game/`; thin pages and composables.
+- Rubric, self-review, closure loop → [`quality-gates.md`](../../docs/infrastructure/quality-gates.md).
+
+**Severity:** critical/high before handoff; medium → fix, ticket, or accept. `invariant` → Vitest. Improve-architecture off default path. Smallest safe PR scope; reuse before new abstractions.
 
 ## Debugging
 
-- Do not propose fixes before completing root-cause investigation. Symptom fixes are not acceptable.
-- **Phase 1 – Root cause:** Read error messages and stack traces; reproduce consistently; trace data flow.
-- **Phase 2 – Pattern:** Find working examples; compare with the broken path; list differences.
-- **Phase 3 – Hypothesis:** Form one clear hypothesis; make the smallest possible change to test it; verify. If it doesn't hold, form a new hypothesis — do not layer fixes.
-- **Phase 4 – Fix:** Implement a single fix for the root cause; verify the fix and that no other tests break.
-- Stop and ask when blocked. If multiple attempts have failed, question the approach instead of guessing.
+No symptom-only fixes. Root cause → one hypothesis → smallest verify → single fix. Detail: [`.cursor/rules/debugging.mdc`](./debugging.mdc) · short form in [`quality-gates.md`](../../docs/infrastructure/quality-gates.md) § Debugging.
 
-## Testing
+## Git / scope
 
-- For behavior changes (stores, composables, utils, scoring rules), add or adjust tests under `tests/` once the test layout exists.
-- For UI-only changes, add tests when the change affects logic, validation, routing, or persistence.
-- Prefer the smallest test scope that proves the change (unit/integration before E2E).
-- Run the relevant tests for the area you changed.
+Follow **Git and destructive operations** in `.cursor/rules/core.mdc` (no commit/push/destructive git without explicit user approval). Router: `.agents/README.md`.
 
-## Documentation
+**`gh`:** this repo is **ionescuig/score_slate**. Before PR/merge/`gh` API here, active account must be **ionescuig** (`gh auth switch -u ionescuig` if needed). Leave **gabriel-klarian** for Klarian / work repos.
 
-- When `docs/` exists, keep it in sync with non-trivial implementation changes in the same work session.
-- Until then, record decisions that affect product behavior in `internal/` or the plan file, as appropriate.
+## Testing / UI / docs
 
-## UI
+- Behaviour changes (stores, composables, utils, scoring): tests under `tests/` — see [`testing.md`](../../docs/infrastructure/testing.md).
+- UI: Tailwind + existing components; landscape for dense grids; industrial/Impeccable when asked (or via done-gate).
+- Browser: Playwright MCP when available; prefer running `http://localhost:3000`.
+- Keep `docs/` in sync with non-trivial behaviour changes; product decisions in `docs/product/` when appropriate.
+- Avoid new dependencies unless necessary.
 
-- Prefer Tailwind utility-first styling and existing components in the repo.
-- Follow component layering: base → common → domain where that structure exists.
-- Avoid introducing new UI libraries unless the project already uses them in that area.
-- Prefer responsive layouts that work on laptop, tablet, and mobile; product docs emphasize landscape for dense score grids — see planning.
-- Mirror existing patterns (labels, inputs, buttons, loading states) when adding or changing UI.
+## Open Brain (MCP `user-open-brain`)
 
-## Browser testing
+Reminders only — not product source of truth (`docs/` + rules win).
 
-- Use Playwright MCP for browser checks when available.
-- Prefer the already-running dev server (typically `http://localhost:3000`); do not start a second dev server unless none is running.
+| When                        | Tool                                                                                          |
+| --------------------------- | --------------------------------------------------------------------------------------------- |
+| Task start / planning       | `search_thoughts` (query + optional `topic`); `list_thoughts` for recent / person / type      |
+| Need full body after search | `fetch` by id (`search` = thin compat id/title/url)                                           |
+| User asks to remember       | `capture_thought` — **never automatic**; offer then wait                                      |
+| Reality changed             | `supersede_thought` (prefer over silent re-capture)                                           |
+| Hide outdated               | `archive_thought` (prefer over `delete_thought`; hard-delete only if user asks, e.g. secrets) |
+| Overview                    | `thought_stats`                                                                               |
 
-## Dependencies
+No secrets in captures.
 
-- Avoid new dependencies unless necessary; prefer existing utilities and patterns.
-- When adding one, use the project's package manager and prefer the latest stable version compatible with the stack.
+## Graphify
 
-## Open Brain
-
-- When Open Brain MCP is available: at task start or planning time, use search/list for prior decisions or preferences that affect implementation.
-- Use `capture_thought` only when the user explicitly asks to save or update memory.
+- Architecture / cross-module: [`.cursor/rules/graphify.mdc`](./graphify.mdc) · [REFERENCE](../../.agents/skills/graphify/REFERENCE.md).
+- `graphify update .` once before done when composables, stores, scoring, or persistence changed.
+- If `graphify` not on PATH, skip and use direct reads.

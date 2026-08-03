@@ -16,13 +16,13 @@ alwaysApply: false
 
 ### Branch / PR review
 
-When reviewing a branch or PR (e.g. producing a review document in `internal/` or inline feedback):
+When reviewing a branch or PR (e.g. producing a review document in gitignored `internal/` or inline feedback):
 
 **Baseline and scope**
 
 - **Baseline:** Use the repo default (see above). Review only what the branch adds or changes vs baseline.
 - **Scope:** Review **committed** changes vs baseline (`git diff <baseline>..HEAD`). Exclude unpushed or working-tree files unless the user explicitly asks to include them.
-- **Rules and docs:** Check the branch against project rules (`.cursor/rules/`), `internal/`, and `docs/` when present. Call out violations or gaps.
+- **Rules and docs:** Check the branch against project rules (`.cursor/rules/`) and `docs/` (including `docs/product/`). Call out violations or gaps.
 - **Evidence-based:** Base feedback on the actual diff and code you read. Do not invent or assume issues. Where helpful, include examples (code snippets, file:line references).
 
 **Honesty and restraint**
@@ -57,4 +57,4 @@ Use a consistent structure:
 
 **Where to save reviews**
 
-- Save branch/PR review documents under `internal/` with a clear name (e.g. `branch-review-<branch-name>.md`). This folder holds local product and planning material (often gitignored).
+- Save branch/PR review documents under `internal/` with a clear name (e.g. `branch-review-<branch-name>.md`). This folder is **gitignored** for local scratch; product canon lives in `docs/product/`.

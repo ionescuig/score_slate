@@ -153,4 +153,5 @@ graphify-out/
 .idea/
 
 # other
+# Local scratch only (branch reviews, WIP). Product canon is versioned under docs/product/.
 internal/

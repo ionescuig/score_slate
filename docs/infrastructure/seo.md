@@ -4,27 +4,27 @@ Score Slate is mostly a **client-heavy PWA** (Pinia + `localStorage`), but **mar
 
 ## What we do today
 
-| Area | Implementation |
-|------|----------------|
-| **Site-wide** | `nuxt.config.ts` `app.head`: `lang="en"`, default `title` / `description`, `theme-color`, `apple-mobile-web-app-title`, `/favicon.svg`, PWA manifest link. |
-| **Title pattern** | `app.vue`: `titleTemplate` → `%s · Score Slate` when a page sets a title; otherwise **Score Slate**. |
-| **Open Graph / Twitter** | `app.vue`: `og:site_name`, `og:type`, `og:locale`, `twitter:card`. Per-page `useSeoMeta` on home, setup, and play. |
-| **Canonical + `og:url`** | `useScoreSlateRouteSeo()` in `app/layouts/default.vue` when `NUXT_PUBLIC_SITE_URL` is set (see below). |
-| **Default share image** | Optional `NUXT_PUBLIC_OG_IMAGE_URL` (absolute URL). Omitted until you host an image. |
-| **Umami (optional)** | Client plugin `app/plugins/umami.client.ts` when `NUXT_PUBLIC_UMAMI_SCRIPT_URL` + `NUXT_PUBLIC_UMAMI_WEBSITE_ID` are set. |
-| **`/play`** | `useSeoMeta({ robots: 'noindex, nofollow' })` — session shell, SSR off; not meant as a landing page. |
-| **robots.txt** | `public/robots.txt` allows crawlers; `/play` is discouraged via meta, not `Disallow` (so you can change mind without duplicate policy). |
+| Area                     | Implementation                                                                                                                                                              |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Site-wide**            | `nuxt.config.ts` `app.head`: `lang="en"`, default `title` / `description`, `theme-color`, `apple-mobile-web-app-title`, `/favicon.ico` + `/favicon.svg`, PWA manifest link. |
+| **Title pattern**        | `app.vue`: `titleTemplate` → `%s · Score Slate` when a page sets a title; otherwise **Score Slate**.                                                                        |
+| **Open Graph / Twitter** | `app.vue`: `og:site_name`, `og:type`, `og:locale`, `twitter:card`. Per-page `useSeoMeta` on home, setup, and play.                                                          |
+| **Canonical + `og:url`** | `useScoreSlateRouteSeo()` in `app/layouts/default.vue` when `NUXT_PUBLIC_SITE_URL` is set (see below).                                                                      |
+| **Default share image**  | Optional `NUXT_PUBLIC_OG_IMAGE_URL` (absolute URL). Omitted until you host an image.                                                                                        |
+| **Umami (optional)**     | Client plugin `app/plugins/umami.client.ts` when `NUXT_PUBLIC_UMAMI_SCRIPT_URL` + `NUXT_PUBLIC_UMAMI_WEBSITE_ID` are set.                                                   |
+| **`/play`**              | `useSeoMeta({ robots: 'noindex, nofollow' })` — session shell, SSR off; not meant as a landing page.                                                                        |
+| **robots.txt**           | `public/robots.txt` allows crawlers; `/play` is discouraged via meta, not `Disallow` (so you can change mind without duplicate policy).                                     |
 
 ## Environment variables (first deploy)
 
 Set in the host’s env or a root `.env` (not committed):
 
-| Variable | Purpose |
-|----------|---------|
-| `NUXT_PUBLIC_SITE_URL` | Public site origin **without** trailing slash, e.g. `https://scoreslate.example.com`. Enables `<link rel="canonical">` and `og:url` on every layout-wrapped page. |
-| `NUXT_PUBLIC_OG_IMAGE_URL` | Absolute URL to a default OG image (commonly **1200×630**). Shown when links are shared if the page does not override `og:image`. |
-| `NUXT_PUBLIC_UMAMI_SCRIPT_URL` | Full URL to your self-hosted Umami `script.js`. If unset (or `NUXT_PUBLIC_UMAMI_WEBSITE_ID` unset), no tracker is injected. |
-| `NUXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami site id (`data-website-id` from the Umami UI). Pair with `NUXT_PUBLIC_UMAMI_SCRIPT_URL`. |
+| Variable                       | Purpose                                                                                                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NUXT_PUBLIC_SITE_URL`         | Public site origin **without** trailing slash, e.g. `https://scoreslate.example.com`. Enables `<link rel="canonical">` and `og:url` on every layout-wrapped page. |
+| `NUXT_PUBLIC_OG_IMAGE_URL`     | Absolute URL to a default OG image (commonly **1200×630**). Shown when links are shared if the page does not override `og:image`.                                 |
+| `NUXT_PUBLIC_UMAMI_SCRIPT_URL` | Full URL to your self-hosted Umami `script.js`. If unset (or `NUXT_PUBLIC_UMAMI_WEBSITE_ID` unset), no tracker is injected.                                       |
+| `NUXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami site id (`data-website-id` from the Umami UI). Pair with `NUXT_PUBLIC_UMAMI_SCRIPT_URL`.                                                                    |
 
 Example (see also `.env.example`):
 
@@ -56,6 +56,18 @@ Prioritize when you have a **production domain** and further **SEO** needs.
 5. **i18n** — If you add locales, set `html lang`, `hreflang`, and localized `description` / titles per route.
 6. **Lighthouse / Search Console** — Run after first production deploy; fix coverage, mobile UX, and Core Web Vitals as needed.
 7. **Dedicated SEO skill** — If the team wants repeatable audits, add a small Cursor skill under `.agents/skills/` that points to this doc + Nuxt SEO docs + a short on-page checklist.
+
+## Favicon (browsers vs crawlers)
+
+Browsers use `<link rel="icon">` in the HTML (SVG for sharp tabs). Many **favicon APIs and bots still request** `/favicon.ico` first, so `public/favicon.ico` must be a **real binary** icon (committed in this repo), not a text file or pasted data URL.
+
+**Verify production**
+
+```bash
+curl -sI "https://YOUR_DOMAIN/favicon.ico"
+```
+
+Expect `content-type: image/x-icon` (or similar) and a **body size well above a few dozen bytes** (the real asset is on the order of 1 KB for this project). If you see `cf-cache-status: HIT` and a stale `content-length` after a deploy, **purge that URL** in Cloudflare (Caching → Configuration → Purge Cache → Custom Purge → URL) or wait for the edge `cache-control` TTL. Third-party checks: [Google favicon](https://www.google.com/s2/favicons?domain=YOUR_DOMAIN&sz=64), [DuckDuckGo](https://icons.duckduckgo.com/ip3/YOUR_DOMAIN.ico) (replace `YOUR_DOMAIN` with your host, no `https://`).
 
 ## Related
 
