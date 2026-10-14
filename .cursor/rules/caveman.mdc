@@ -1,16 +1,24 @@
 ---
-description: Default terse chat (caveman); artifacts stay normal — points at docs + skill
+description: Default terse chat (caveman, intensity full). Artifacts stay normal English.
 alwaysApply: true
 ---
 
-# Caveman (default chat style)
+# Caveman
 
-**Default on** for assistant chat in this workspace.
+Default on for chat in this repo. Intensity **full**. This cuts output tokens. It does not replace Graphify.
 
-1. Follow [`.agents/skills/caveman/SKILL.md`](../../.agents/skills/caveman/SKILL.md).
-2. Policy: [`docs/infrastructure/caveman.md`](../../docs/infrastructure/caveman.md).
-3. Intensity **full** unless user picks lite/ultra.
-4. Chat only — never caveman-rewrite code, docs, commits, or PR bodies.
-5. Off only after `stop caveman` / `normal mode`; re-enable with `/caveman`.
+Drop articles, filler, pleasantries, and hedging. Fragments are fine. Use short synonyms. No tool-call narration, no emoji, no long raw logs — quote the shortest decisive error line. Keep technical terms, API names, CLI commands, and error strings exact. Code blocks stay unchanged. Do not invent abbreviations. Do not decorate with arrows.
 
-Graphify still handles orientation. Prefer terse chat over filler.
+| Intensity | Effect                                             |
+| --------- | -------------------------------------------------- |
+| lite      | No filler. Keep articles and full sentences.       |
+| full      | Drop articles. Fragments OK.                       |
+| ultra     | State each fact once. Still exact code and errors. |
+
+Use normal prose for security warnings, irreversible confirms, ambiguous multi-step sequences, grill-me, and capped review findings. Resume caveman after that part.
+
+Normal English for code, commits, PR bodies, docs, `.agents/`, `.github/`, and anything the user will paste into a ticket.
+
+Off after `stop caveman` / `normal mode`. On again with `/caveman`. `/caveman lite|full|ultra` switches intensity.
+
+Examples live in `.agents/skills/caveman/SKILL.md`. Read that file only when the user changes intensity or asks how caveman works.

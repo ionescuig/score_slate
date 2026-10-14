@@ -60,7 +60,6 @@ Declare the tier in the plan/preflight header. **Do not apply T3 gates to T1 wor
 | [`ui-industrial-reviewer`](skills/ui-industrial-reviewer/SKILL.md)               | Scoreboard/setup UI polish (also pulled by done-gate when UI touched)                                            |
 | Design / Impeccable pack                                                         | Via [`.cursor/rules/design-skills.mdc`](../.cursor/rules/design-skills.mdc) — only when user asks or design task |
 | [`improve-codebase-architecture`](skills/improve-codebase-architecture/SKILL.md) | **Refactor sessions only** — off the delivery path                                                               |
-| [`staff-code-planner`](skills/staff-code-planner/SKILL.md)                       | Turn findings into a staged improvement plan                                                                     |
 | [`review-to-plan`](skills/review-to-plan/SKILL.md)                               | Convert review output into an executable fix plan                                                                |
 | [`ubiquitous-language`](skills/ubiquitous-language/SKILL.md)                     | Domain glossary                                                                                                  |
 
@@ -74,7 +73,7 @@ Declare the tier in the plan/preflight header. **Do not apply T3 gates to T1 wor
 | Chat style        | [`docs/infrastructure/caveman.md`](../docs/infrastructure/caveman.md)                                 |
 | Testing           | [`docs/infrastructure/testing.md`](../docs/infrastructure/testing.md)                                 |
 | Architecture      | [`docs/architecture/overview.md`](../docs/architecture/overview.md)                                   |
-| Product / PRD     | [`docs/product/`](../docs/product/)                                                                    |
+| Product / PRD     | [`docs/product/`](../docs/product/)                                                                   |
 
 ## Verification commands (local)
 

@@ -1,5 +1,5 @@
 ---
-description: Execution guardrails — verification, quality pointers, Open Brain, git, gh; delivery workflows live in skills
+description: Execution guardrails — verification, quality pointers, git, gh; delivery workflows live in skills
 alwaysApply: true
 ---
 
@@ -34,21 +34,6 @@ Follow **Git and destructive operations** in `.cursor/rules/core.mdc` (no commit
 - Browser: Playwright MCP when available; prefer running `http://localhost:3000`.
 - Keep `docs/` in sync with non-trivial behaviour changes; product decisions in `docs/product/` when appropriate.
 - Avoid new dependencies unless necessary.
-
-## Open Brain (MCP `user-open-brain`)
-
-Reminders only — not product source of truth (`docs/` + rules win).
-
-| When                        | Tool                                                                                          |
-| --------------------------- | --------------------------------------------------------------------------------------------- |
-| Task start / planning       | `search_thoughts` (query + optional `topic`); `list_thoughts` for recent / person / type      |
-| Need full body after search | `fetch` by id (`search` = thin compat id/title/url)                                           |
-| User asks to remember       | `capture_thought` — **never automatic**; offer then wait                                      |
-| Reality changed             | `supersede_thought` (prefer over silent re-capture)                                           |
-| Hide outdated               | `archive_thought` (prefer over `delete_thought`; hard-delete only if user asks, e.g. secrets) |
-| Overview                    | `thought_stats`                                                                               |
-
-No secrets in captures.
 
 ## Graphify
 

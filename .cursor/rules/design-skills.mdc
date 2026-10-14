@@ -1,6 +1,6 @@
 ---
-description: Route UI/design tasks to Impeccable skills under .agents/skills — read SKILL.md before implementing or reviewing.
-alwaysApply: true
+description: Route UI and design tasks to Impeccable skills. Read when the task touches layout, visuals, copy, or accessibility. Skip for scoring, rules, and non-UI fixes.
+alwaysApply: false
 ---
 
 ## When this applies

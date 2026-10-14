@@ -1,12 +1,6 @@
 ---
 name: caveman
-description: >-
-  Default chat reply style for this workspace. Ultra-compressed (caveman) prose
-  that cuts output tokens while keeping full technical accuracy. Intensity:
-  lite, full (default), ultra. Always apply to assistant chat unless user said
-  "stop caveman" / "normal mode". Also use when user says "caveman",
-  "/caveman", "be brief", or "less tokens". Artifacts (code/docs/PRs) stay
-  normal English.
+description: Caveman examples and intensity switches. Everyday reply rules live in .cursor/rules/caveman.mdc. Read this skill only when the user changes intensity or asks how caveman works.
 ---
 
 # Caveman (reply compression)

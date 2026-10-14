@@ -1,0 +1,21 @@
+---
+description: Open Brain research for score_slate. Read for non-trivial features, planning, or when the user mentions thoughts. Skip routine edits.
+alwaysApply: false
+---
+
+# Open Brain (MCP `user-open-brain`)
+
+Reminders only — not product source of truth (`docs/` + rules win).
+
+Search when the task is a non-trivial feature, planning, or the user mentions thoughts. Skip routine edits.
+
+| When                                                         | Tool                                                                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| Non-trivial feature, planning, or the user mentions thoughts | `search_thoughts` (query + optional `topic`); `list_thoughts` for recent / person / type      |
+| Need full body after search                                  | `fetch` by id (`search` = thin compat id/title/url)                                           |
+| User asks to remember                                        | `capture_thought` — **never automatic**; offer then wait                                      |
+| Reality changed                                              | `supersede_thought` (prefer over silent re-capture)                                           |
+| Hide outdated                                                | `archive_thought` (prefer over `delete_thought`; hard-delete only if user asks, e.g. secrets) |
+| Overview                                                     | `thought_stats`                                                                               |
+
+No secrets in captures.
